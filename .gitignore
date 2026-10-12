@@ -1,0 +1,7 @@
+_runs/
+__pycache__/
+*.pyc
+.DS_Store
+docs/**/*.pptx
+docs/legacy-steering/
+skills/canvas-restyle/templates/registry.local.json

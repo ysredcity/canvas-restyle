@@ -1,0 +1,39 @@
+{
+ "_note": "数据驱动模板注册表。只有用户明确指定某画板为参考或模板，且其 token 命中某模板的 tokens 时才使用；默认一律走 redraw.py。本文件随 skill 分发，tokens / docs 为空；真实的基准画板 token 与文档链接放在同目录的 registry.local.json（结构相同、不入库），查找时两者合并。",
+ "templates": {
+  "ops-board": {
+   "name": "运营看板（业务主线/价值呈现/对标/现状及问题/规划方向/底栏）",
+   "dir": "templates/ops-board",
+   "style_doc": "references/styles/ops-board.md",
+   "data_keys": [
+    "TITLE",
+    "HEADS",
+    "VALUES",
+    "BENCH",
+    "PROBLEMS",
+    "PLANS",
+    "PILLARS",
+    "FOOTER",
+    "ORDER"
+   ],
+   "tokens": {},
+   "docs": []
+  },
+  "arch-ba-aa-da": {
+   "name": "BA/AA/DA 架构图（用户旅程/价值流 + BA + AA + DA + 状态图例）",
+   "dir": "templates/arch-ba-aa-da",
+   "style_doc": "references/styles/ba-aa-da.md",
+   "data_keys": [
+    "JOURNEY",
+    "VALUE",
+    "BA",
+    "AA",
+    "DA_L",
+    "DA_R",
+    "LEGEND"
+   ],
+   "tokens": {},
+   "docs": []
+  }
+ }
+}

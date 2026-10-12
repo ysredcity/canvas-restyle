@@ -1,0 +1,9 @@
+# 回归用例：名称  raw 路径（相对仓库根）。raw 来自历史真实画板导出，存放在 _runs/（不入库）。
+# 新增类型的画板时，把它的 source/raw.json 加进来。
+roadmap-table      _runs/src13/raw.json
+swimlane-ccu       _runs/src15/raw.json
+swimlane-service   _runs/src16/raw.json
+info-board         _runs/src17/raw.json
+layered-user-ops   _runs/src18/raw.json
+layered-ipd        _runs/src11/raw.json
+ops-board-raw      _runs/src4/raw.json

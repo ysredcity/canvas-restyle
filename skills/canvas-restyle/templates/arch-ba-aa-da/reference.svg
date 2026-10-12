@@ -1,0 +1,301 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2265" height="1289" viewBox="0 0 2265 1289">
+<defs>
+<linearGradient id="gj" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff3d2"/><stop offset="1" stop-color="#fde6ae"/></linearGradient>
+<linearGradient id="gv" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#e6f7ec"/><stop offset="1" stop-color="#cdeedb"/></linearGradient>
+<linearGradient id="gb" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#d9e8ff"/><stop offset="1" stop-color="#bcd6fb"/></linearGradient>
+<linearGradient id="gt" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e3f5f4"/><stop offset="1" stop-color="#cdebe9"/></linearGradient>
+<filter id="sh" filterUnits="userSpaceOnUse" x="-60" y="-60" width="2385" height="1409"><feDropShadow dx="0" dy="2" stdDeviation="5" flood-color="#0f172a" flood-opacity="0.07"/></filter>
+</defs>
+<rect width="2265" height="1289" fill="#eef2f7"/>
+<g transform="translate(40,32)">
+<rect x="0.0" y="0.0" width="2185.0" height="140.0" rx="16" fill="#ffffff" stroke="#d8e0ea" stroke-width="1" filter="url(#sh)"/>
+<rect x="20.0" y="18.0" width="124.0" height="46.0" rx="10" fill="#fff8e6" stroke="#c98a12" stroke-width="1.2"/>
+<text x="82.0" y="47.5" font-size="18" font-family="Noto Sans SC" font-weight="bold" fill="#1f2937" text-anchor="middle">用户旅程</text>
+<polygon points="167.0,18.0 407.6,18.0 429.6,41.0 407.6,64.0 167.0,64.0" fill="url(#gj)" stroke="#ecc66a" stroke-width="1" stroke-linejoin="round"/>
+<text x="287.3" y="46.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#5b3d00" text-anchor="middle">品牌认知</text>
+<polygon points="415.6,18.0 656.2,18.0 678.2,41.0 656.2,64.0 415.6,64.0 437.6,41.0" fill="url(#gj)" stroke="#ecc66a" stroke-width="1" stroke-linejoin="round"/>
+<text x="546.9" y="46.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#5b3d00" text-anchor="middle">兴趣探索</text>
+<polygon points="664.2,18.0 904.9,18.0 926.9,41.0 904.9,64.0 664.2,64.0 686.2,41.0" fill="url(#gj)" stroke="#ecc66a" stroke-width="1" stroke-linejoin="round"/>
+<text x="795.6" y="46.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#5b3d00" text-anchor="middle">购买决策</text>
+<polygon points="912.9,18.0 1153.5,18.0 1175.5,41.0 1153.5,64.0 912.9,64.0 934.9,41.0" fill="url(#gj)" stroke="#ecc66a" stroke-width="1" stroke-linejoin="round"/>
+<text x="1044.2" y="46.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#5b3d00" text-anchor="middle">产品交付</text>
+<polygon points="1161.5,18.0 1402.1,18.0 1424.1,41.0 1402.1,64.0 1161.5,64.0 1183.5,41.0" fill="url(#gj)" stroke="#ecc66a" stroke-width="1" stroke-linejoin="round"/>
+<text x="1292.8" y="46.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#5b3d00" text-anchor="middle">安装调试</text>
+<polygon points="1410.1,18.0 1650.8,18.0 1672.8,41.0 1650.8,64.0 1410.1,64.0 1432.1,41.0" fill="url(#gj)" stroke="#ecc66a" stroke-width="1" stroke-linejoin="round"/>
+<text x="1541.4" y="46.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#5b3d00" text-anchor="middle">产品使用</text>
+<polygon points="1658.8,18.0 1899.4,18.0 1921.4,41.0 1899.4,64.0 1658.8,64.0 1680.8,41.0" fill="url(#gj)" stroke="#ecc66a" stroke-width="1" stroke-linejoin="round"/>
+<text x="1790.1" y="46.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#5b3d00" text-anchor="middle">维修保养</text>
+<polygon points="1907.4,18.0 2148.0,18.0 2170.0,41.0 2148.0,64.0 1907.4,64.0 1929.4,41.0" fill="url(#gj)" stroke="#ecc66a" stroke-width="1" stroke-linejoin="round"/>
+<text x="2038.7" y="46.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#5b3d00" text-anchor="middle">复购推荐</text>
+<rect x="20.0" y="76.0" width="124.0" height="46.0" rx="10" fill="#eef9f1" stroke="#2f9e5b" stroke-width="1.2"/>
+<text x="82.0" y="105.5" font-size="18" font-family="Noto Sans SC" font-weight="bold" fill="#1f2937" text-anchor="middle">价值流</text>
+<polygon points="167.0,76.0 407.6,76.0 429.6,99.0 407.6,122.0 167.0,122.0" fill="url(#gv)" stroke="#8fd0a8" stroke-width="1" stroke-linejoin="round"/>
+<text x="287.3" y="104.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#14532d" text-anchor="middle">洞察与需求分析</text>
+<polygon points="415.6,76.0 656.2,76.0 678.2,99.0 656.2,122.0 415.6,122.0 437.6,99.0" fill="url(#gv)" stroke="#8fd0a8" stroke-width="1" stroke-linejoin="round"/>
+<text x="546.9" y="104.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#14532d" text-anchor="middle">规划与产品开发</text>
+<polygon points="664.2,76.0 904.9,76.0 926.9,99.0 904.9,122.0 664.2,122.0 686.2,99.0" fill="url(#gv)" stroke="#8fd0a8" stroke-width="1" stroke-linejoin="round"/>
+<text x="795.6" y="104.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#14532d" text-anchor="middle">营销执行</text>
+<polygon points="912.9,76.0 1153.5,76.0 1175.5,99.0 1153.5,122.0 912.9,122.0 934.9,99.0" fill="url(#gv)" stroke="#8fd0a8" stroke-width="1" stroke-linejoin="round"/>
+<text x="1044.2" y="104.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#14532d" text-anchor="middle">渠道与门店运营</text>
+<polygon points="1161.5,76.0 1402.1,76.0 1424.1,99.0 1402.1,122.0 1161.5,122.0 1183.5,99.0" fill="url(#gv)" stroke="#8fd0a8" stroke-width="1" stroke-linejoin="round"/>
+<text x="1292.8" y="104.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#14532d" text-anchor="middle">产品交付</text>
+<polygon points="1410.1,76.0 1650.8,76.0 1672.8,99.0 1650.8,122.0 1410.1,122.0 1432.1,99.0" fill="url(#gv)" stroke="#8fd0a8" stroke-width="1" stroke-linejoin="round"/>
+<text x="1541.4" y="104.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#14532d" text-anchor="middle">用户使用体验</text>
+<polygon points="1658.8,76.0 1899.4,76.0 1921.4,99.0 1899.4,122.0 1658.8,122.0 1680.8,99.0" fill="url(#gv)" stroke="#8fd0a8" stroke-width="1" stroke-linejoin="round"/>
+<text x="1790.1" y="104.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#14532d" text-anchor="middle">用户服务</text>
+<polygon points="1907.4,76.0 2148.0,76.0 2170.0,99.0 2148.0,122.0 1907.4,122.0 1929.4,99.0" fill="url(#gv)" stroke="#8fd0a8" stroke-width="1" stroke-linejoin="round"/>
+<text x="2038.7" y="104.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#14532d" text-anchor="middle">用户增值</text>
+<rect x="0.0" y="160.0" width="2185.0" height="341.0" rx="16" fill="#ffffff" stroke="#d8e0ea" stroke-width="1" filter="url(#sh)"/>
+<rect x="20.0" y="178.0" width="124.0" height="46.0" rx="10" fill="#eef4ff" stroke="#3b6fd4" stroke-width="1.2"/>
+<text x="34.1" y="207.5" font-size="18" font-family="Noto Sans SC" font-weight="bold" fill="#3b6fd4" text-anchor="start">BA</text>
+<text x="57.8" y="207.5" font-size="18" font-family="Noto Sans SC" font-weight="bold" fill="#1f2937" text-anchor="start">流程架构</text>
+<rect x="20" y="245.0" width="4" height="18" rx="2" fill="#3b6fd4"/>
+<text x="32.0" y="259.8" font-size="16" font-family="Noto Sans SC" font-weight="bold" fill="#1f2937" text-anchor="start">业务差距</text>
+<polygon points="167.0,178.0 562.0,178.0 582.0,201.0 562.0,224.0 167.0,224.0" fill="url(#gb)" stroke="#86aef0" stroke-width="1" stroke-linejoin="round"/>
+<text x="364.5" y="206.8" font-size="16" font-family="Noto Sans SC" font-weight="bold" fill="#17306b" text-anchor="middle">1.0 产品开发</text>
+<text x="175.0" y="259.4" font-size="15" font-family="Noto Sans SC" font-weight="bold" fill="#3b6fd4" text-anchor="start">1.</text>
+<text x="197.0" y="259.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#475569" text-anchor="start">组织协同不足：跨部门开发团队职责不清，产品开</text>
+<text x="197.0" y="283.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#475569" text-anchor="start">发组织未显性呈现</text>
+<text x="175.0" y="313.4" font-size="15" font-family="Noto Sans SC" font-weight="bold" fill="#3b6fd4" text-anchor="start">2.</text>
+<text x="197.0" y="313.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#475569" text-anchor="start">流程贯通：平台与通用模块数据未及时更新，开发</text>
+<text x="197.0" y="337.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#475569" text-anchor="start">阶段复用场景缺失，端到端未贯通；</text>
+<rect x="246.5" y="414.0" width="110.0" height="69.0" rx="12" fill="#eaf8ef" stroke="#bfe6cc" stroke-width="1"/>
+<text x="301.5" y="435.5" font-size="12.5" font-family="Noto Sans SC" font-weight="normal" fill="#3f8f5e" text-anchor="middle">线上化率</text>
+<text x="301.5" y="467.0" font-size="25" font-family="Noto Sans SC" font-weight="bold" fill="#15803d" text-anchor="middle">80.0%</text>
+<rect x="368.5" y="414.0" width="110.0" height="69.0" rx="12" fill="#fdf0e6" stroke="#f3d3b3" stroke-width="1"/>
+<text x="423.5" y="435.5" font-size="12.5" font-family="Noto Sans SC" font-weight="normal" fill="#b9763a" text-anchor="middle">智能化率</text>
+<text x="423.5" y="467.0" font-size="25" font-family="Noto Sans SC" font-weight="bold" fill="#c2492f" text-anchor="middle">5.0%</text>
+<polygon points="570.0,178.0 965.0,178.0 985.0,201.0 965.0,224.0 570.0,224.0 590.0,201.0" fill="url(#gb)" stroke="#86aef0" stroke-width="1" stroke-linejoin="round"/>
+<text x="777.5" y="206.8" font-size="16" font-family="Noto Sans SC" font-weight="bold" fill="#17306b" text-anchor="middle">3.4 管理渠道</text>
+<text x="578.0" y="259.4" font-size="15" font-family="Noto Sans SC" font-weight="bold" fill="#3b6fd4" text-anchor="start">1.</text>
+<text x="600.0" y="259.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#475569" text-anchor="start">方案设计、报价、合同签订依赖门店人工操作，方</text>
+<text x="600.0" y="283.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#475569" text-anchor="start">案标准化不足，输出效率偏低；</text>
+<text x="578.0" y="313.4" font-size="15" font-family="Noto Sans SC" font-weight="bold" fill="#3b6fd4" text-anchor="start">2.</text>
+<text x="600.0" y="313.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#475569" text-anchor="start">商机到合同链路缺少过程留痕，过程信息无沉淀；</text>
+<text x="578.0" y="343.4" font-size="15" font-family="Noto Sans SC" font-weight="bold" fill="#3b6fd4" text-anchor="start">3.</text>
+<text x="600.0" y="343.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#475569" text-anchor="start">门店销售动作缺少统一管控，方案与报价口径不一</text>
+<text x="600.0" y="367.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#475569" text-anchor="start">致，影响客户体验与成交转化；</text>
+<rect x="649.5" y="414.0" width="110.0" height="69.0" rx="12" fill="#eaf8ef" stroke="#bfe6cc" stroke-width="1"/>
+<text x="704.5" y="435.5" font-size="12.5" font-family="Noto Sans SC" font-weight="normal" fill="#3f8f5e" text-anchor="middle">线上化率</text>
+<text x="704.5" y="467.0" font-size="25" font-family="Noto Sans SC" font-weight="bold" fill="#15803d" text-anchor="middle">40.0%</text>
+<rect x="771.5" y="414.0" width="110.0" height="69.0" rx="12" fill="#fdf0e6" stroke="#f3d3b3" stroke-width="1"/>
+<text x="826.5" y="435.5" font-size="12.5" font-family="Noto Sans SC" font-weight="normal" fill="#b9763a" text-anchor="middle">智能化率</text>
+<text x="826.5" y="467.0" font-size="25" font-family="Noto Sans SC" font-weight="bold" fill="#c2492f" text-anchor="middle">0%</text>
+<polygon points="973.0,178.0 1368.0,178.0 1388.0,201.0 1368.0,224.0 973.0,224.0 993.0,201.0" fill="url(#gb)" stroke="#86aef0" stroke-width="1" stroke-linejoin="round"/>
+<text x="1180.5" y="206.8" font-size="16" font-family="Noto Sans SC" font-weight="bold" fill="#17306b" text-anchor="middle">3.5 管理零售</text>
+<text x="981.0" y="259.4" font-size="15" font-family="Noto Sans SC" font-weight="bold" fill="#3b6fd4" text-anchor="start">1.</text>
+<text x="1003.0" y="259.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#475569" text-anchor="start">安装耗材仅照片反馈，缺少结构化数据，成本分析</text>
+<text x="1003.0" y="283.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#475569" text-anchor="start">与质量追溯困难；</text>
+<text x="981.0" y="313.4" font-size="15" font-family="Noto Sans SC" font-weight="bold" fill="#3b6fd4" text-anchor="start">2.</text>
+<text x="1003.0" y="313.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#475569" text-anchor="start">约 20% 用户安装信息无法获取，用户信息缺失，</text>
+<text x="1003.0" y="337.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#475569" text-anchor="start">影响后续保修确认；</text>
+<text x="981.0" y="367.4" font-size="15" font-family="Noto Sans SC" font-weight="bold" fill="#3b6fd4" text-anchor="start">3.</text>
+<text x="1003.0" y="367.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#475569" text-anchor="start">共享仓推广后，发货产品与合同对应关系错乱，结</text>
+<text x="1003.0" y="391.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#475569" text-anchor="start">算功能失效；</text>
+<rect x="1052.5" y="414.0" width="110.0" height="69.0" rx="12" fill="#eaf8ef" stroke="#bfe6cc" stroke-width="1"/>
+<text x="1107.5" y="435.5" font-size="12.5" font-family="Noto Sans SC" font-weight="normal" fill="#3f8f5e" text-anchor="middle">线上化率</text>
+<text x="1107.5" y="467.0" font-size="25" font-family="Noto Sans SC" font-weight="bold" fill="#15803d" text-anchor="middle">55.0%</text>
+<rect x="1174.5" y="414.0" width="110.0" height="69.0" rx="12" fill="#fdf0e6" stroke="#f3d3b3" stroke-width="1"/>
+<text x="1229.5" y="435.5" font-size="12.5" font-family="Noto Sans SC" font-weight="normal" fill="#b9763a" text-anchor="middle">智能化率</text>
+<text x="1229.5" y="467.0" font-size="25" font-family="Noto Sans SC" font-weight="bold" fill="#c2492f" text-anchor="middle">0%</text>
+<polygon points="1376.0,178.0 1771.0,178.0 1791.0,201.0 1771.0,224.0 1376.0,224.0 1396.0,201.0" fill="url(#gb)" stroke="#86aef0" stroke-width="1" stroke-linejoin="round"/>
+<text x="1583.5" y="206.8" font-size="16" font-family="Noto Sans SC" font-weight="bold" fill="#17306b" text-anchor="middle">3.7 管理服务</text>
+<text x="1384.0" y="259.4" font-size="15" font-family="Noto Sans SC" font-weight="bold" fill="#3b6fd4" text-anchor="start">1.</text>
+<text x="1406.0" y="259.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#475569" text-anchor="start">未结合渠道运营数据进行渠道分级运营</text>
+<text x="1384.0" y="289.4" font-size="15" font-family="Noto Sans SC" font-weight="bold" fill="#3b6fd4" text-anchor="start">2.</text>
+<text x="1406.0" y="289.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#475569" text-anchor="start">服务稽查在线下开展，执行标准与规范未通过系统</text>
+<text x="1406.0" y="313.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#475569" text-anchor="start">固化提效</text>
+<rect x="1455.5" y="414.0" width="110.0" height="69.0" rx="12" fill="#eaf8ef" stroke="#bfe6cc" stroke-width="1"/>
+<text x="1510.5" y="435.5" font-size="12.5" font-family="Noto Sans SC" font-weight="normal" fill="#3f8f5e" text-anchor="middle">线上化率</text>
+<text x="1510.5" y="467.0" font-size="25" font-family="Noto Sans SC" font-weight="bold" fill="#15803d" text-anchor="middle">60.0%</text>
+<rect x="1577.5" y="414.0" width="110.0" height="69.0" rx="12" fill="#fdf0e6" stroke="#f3d3b3" stroke-width="1"/>
+<text x="1632.5" y="435.5" font-size="12.5" font-family="Noto Sans SC" font-weight="normal" fill="#b9763a" text-anchor="middle">智能化率</text>
+<text x="1632.5" y="467.0" font-size="25" font-family="Noto Sans SC" font-weight="bold" fill="#c2492f" text-anchor="middle">0.5%</text>
+<polygon points="1779.0,178.0 2150.0,178.0 2170.0,201.0 2150.0,224.0 1779.0,224.0 1799.0,201.0" fill="url(#gb)" stroke="#86aef0" stroke-width="1" stroke-linejoin="round"/>
+<text x="1974.5" y="206.8" font-size="16" font-family="Noto Sans SC" font-weight="bold" fill="#17306b" text-anchor="middle">4.0 用户运营</text>
+<text x="1787.0" y="259.4" font-size="15" font-family="Noto Sans SC" font-weight="bold" fill="#3b6fd4" text-anchor="start">1.</text>
+<text x="1809.0" y="259.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#475569" text-anchor="start">老用户积分获取、使用途径单一，推荐积极性未完</text>
+<text x="1809.0" y="283.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#475569" text-anchor="start">全激活</text>
+<text x="1787.0" y="313.4" font-size="15" font-family="Noto Sans SC" font-weight="bold" fill="#3b6fd4" text-anchor="start">2.</text>
+<text x="1809.0" y="313.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#475569" text-anchor="start">积分逆向流程未实现，用户权益保障不足</text>
+<text x="1787.0" y="343.4" font-size="15" font-family="Noto Sans SC" font-weight="bold" fill="#3b6fd4" text-anchor="start">3.</text>
+<text x="1809.0" y="343.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#475569" text-anchor="start">触点集中于推荐环节，中间运营断层，老用户沉寂</text>
+<text x="1809.0" y="367.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#475569" text-anchor="start">，召回与转化难度大，易流失</text>
+<rect x="1858.5" y="414.0" width="110.0" height="69.0" rx="12" fill="#eaf8ef" stroke="#bfe6cc" stroke-width="1"/>
+<text x="1913.5" y="435.5" font-size="12.5" font-family="Noto Sans SC" font-weight="normal" fill="#3f8f5e" text-anchor="middle">线上化率</text>
+<text x="1913.5" y="467.0" font-size="25" font-family="Noto Sans SC" font-weight="bold" fill="#15803d" text-anchor="middle">15.0%</text>
+<rect x="1980.5" y="414.0" width="110.0" height="69.0" rx="12" fill="#fdf0e6" stroke="#f3d3b3" stroke-width="1"/>
+<text x="2035.5" y="435.5" font-size="12.5" font-family="Noto Sans SC" font-weight="normal" fill="#b9763a" text-anchor="middle">智能化率</text>
+<text x="2035.5" y="467.0" font-size="25" font-family="Noto Sans SC" font-weight="bold" fill="#c2492f" text-anchor="middle">1.0%</text>
+<rect x="0.0" y="521.0" width="2185.0" height="414.0" rx="16" fill="#ffffff" stroke="#d8e0ea" stroke-width="1" filter="url(#sh)"/>
+<rect x="20.0" y="539.0" width="124.0" height="46.0" rx="10" fill="#e8f6f6" stroke="#0e8f8d" stroke-width="1.2"/>
+<text x="34.5" y="568.5" font-size="18" font-family="Noto Sans SC" font-weight="bold" fill="#0e8f8d" text-anchor="start">AA</text>
+<text x="57.5" y="568.5" font-size="18" font-family="Noto Sans SC" font-weight="bold" fill="#1f2937" text-anchor="start">应用架构</text>
+<rect x="20" y="716.0" width="4" height="18" rx="2" fill="#0e8f8d"/>
+<text x="32.0" y="730.8" font-size="16" font-family="Noto Sans SC" font-weight="bold" fill="#1f2937" text-anchor="start">应用差距</text>
+<rect x="167.0" y="539.0" width="391.0" height="154.0" rx="14" fill="url(#gt)" stroke="#9fd3d1" stroke-width="1"/>
+<text x="362.5" y="568.5" font-size="18" font-family="Noto Sans SC" font-weight="bold" fill="#0b5f5e" text-anchor="middle">需求/产品系统</text>
+<rect x="181.0" y="585.0" width="114.0" height="42.0" rx="9" fill="#fdeebd" stroke="#e6c76a" stroke-width="1"/>
+<text x="238.0" y="611.2" font-size="14.5" font-family="Noto Sans SC" font-weight="normal" fill="#1f2937" text-anchor="middle">需求管理</text>
+<rect x="305.0" y="585.0" width="114.0" height="42.0" rx="9" fill="#f6faff" stroke="#a9c7f2" stroke-width="1"/>
+<text x="362.0" y="611.2" font-size="14.5" font-family="Noto Sans SC" font-weight="normal" fill="#1f2937" text-anchor="middle">项目管理</text>
+<rect x="429.0" y="585.0" width="114.0" height="42.0" rx="9" fill="#f6faff" stroke="#a9c7f2" stroke-width="1"/>
+<text x="486.0" y="611.2" font-size="14.5" font-family="Noto Sans SC" font-weight="normal" fill="#1f2937" text-anchor="middle">零部件管理</text>
+<rect x="181.0" y="639.0" width="114.0" height="42.0" rx="9" fill="#f6faff" stroke="#a9c7f2" stroke-width="1"/>
+<text x="238.0" y="665.2" font-size="14.5" font-family="Noto Sans SC" font-weight="normal" fill="#1f2937" text-anchor="middle">规划管理</text>
+<rect x="305.0" y="639.0" width="114.0" height="42.0" rx="9" fill="#f6faff" stroke="#a9c7f2" stroke-width="1"/>
+<text x="362.0" y="665.2" font-size="14.5" font-family="Noto Sans SC" font-weight="normal" fill="#1f2937" text-anchor="middle">产品管理</text>
+<rect x="429.0" y="639.0" width="114.0" height="42.0" rx="9" fill="#f6faff" stroke="#a9c7f2" stroke-width="1"/>
+<text x="486.0" y="665.2" font-size="14.5" font-family="Noto Sans SC" font-weight="normal" fill="#1f2937" text-anchor="middle">BOM管理</text>
+<text x="175.0" y="730.4" font-size="15" font-family="Noto Sans SC" font-weight="bold" fill="#0e8f8d" text-anchor="start">1.</text>
+<text x="197.0" y="730.4" font-size="15" font-family="Noto Sans SC" font-weight="bold" fill="#111827" text-anchor="start">场景覆盖不全：</text>
+<text x="302.0" y="730.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#475569" text-anchor="start">已实现需求到产品路标和产品开发</text>
+<text x="197.0" y="754.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#475569" text-anchor="start">的分发闭环，但需求到产品改进、平台路标、技术</text>
+<text x="197.0" y="778.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#475569" text-anchor="start">开发的分发链路未打通。</text>
+<rect x="570.0" y="539.0" width="391.0" height="154.0" rx="14" fill="url(#gt)" stroke="#9fd3d1" stroke-width="1"/>
+<text x="765.5" y="568.5" font-size="18" font-family="Noto Sans SC" font-weight="bold" fill="#0b5f5e" text-anchor="middle">客户关系系统</text>
+<rect x="584.0" y="585.0" width="114.0" height="42.0" rx="9" fill="#f6faff" stroke="#a9c7f2" stroke-width="1"/>
+<text x="641.0" y="611.2" font-size="14.5" font-family="Noto Sans SC" font-weight="normal" fill="#1f2937" text-anchor="middle">活动管理</text>
+<rect x="708.0" y="585.0" width="114.0" height="42.0" rx="9" fill="#f6faff" stroke="#a9c7f2" stroke-width="1"/>
+<text x="765.0" y="611.2" font-size="14.5" font-family="Noto Sans SC" font-weight="normal" fill="#1f2937" text-anchor="middle">渠道管理</text>
+<rect x="832.0" y="585.0" width="114.0" height="42.0" rx="9" fill="#fdeebd" stroke="#e6c76a" stroke-width="1"/>
+<text x="889.0" y="611.2" font-size="14.5" font-family="Noto Sans SC" font-weight="normal" fill="#1f2937" text-anchor="middle">库存管理</text>
+<rect x="584.0" y="639.0" width="114.0" height="42.0" rx="9" fill="#fdeebd" stroke="#e6c76a" stroke-width="1"/>
+<text x="641.0" y="665.2" font-size="14.5" font-family="Noto Sans SC" font-weight="normal" fill="#1f2937" text-anchor="middle">商机管理</text>
+<rect x="708.0" y="639.0" width="114.0" height="42.0" rx="9" fill="#f6faff" stroke="#a9c7f2" stroke-width="1"/>
+<text x="765.0" y="665.2" font-size="14.5" font-family="Noto Sans SC" font-weight="normal" fill="#1f2937" text-anchor="middle">销售跟进</text>
+<rect x="832.0" y="639.0" width="114.0" height="42.0" rx="9" fill="#dde2f8" stroke="#a7b2e6" stroke-width="1"/>
+<text x="889.0" y="665.2" font-size="14.5" font-family="Noto Sans SC" font-weight="normal" fill="#1f2937" text-anchor="middle">流量聚合</text>
+<text x="578.0" y="730.4" font-size="15" font-family="Noto Sans SC" font-weight="bold" fill="#0e8f8d" text-anchor="start">1.</text>
+<text x="600.0" y="730.4" font-size="15" font-family="Noto Sans SC" font-weight="bold" fill="#111827" text-anchor="start">流量聚合：</text>
+<text x="675.0" y="730.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#475569" text-anchor="start">缺少对接各内容平台接口、24 小时智能</text>
+<text x="600.0" y="754.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#475569" text-anchor="start">客服、一键外呼、智能标签并回传客户系统的综合</text>
+<text x="600.0" y="778.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#475569" text-anchor="start">聚合平台</text>
+<text x="578.0" y="808.4" font-size="15" font-family="Noto Sans SC" font-weight="bold" fill="#0e8f8d" text-anchor="start">2.</text>
+<text x="600.0" y="808.4" font-size="15" font-family="Noto Sans SC" font-weight="bold" fill="#111827" text-anchor="start">商机跟进：</text>
+<text x="675.0" y="808.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#475569" text-anchor="start">系统对门店导购缺少实质管理动作，商</text>
+<text x="600.0" y="832.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#475569" text-anchor="start">机回访没有跟进记录</text>
+<text x="578.0" y="862.4" font-size="15" font-family="Noto Sans SC" font-weight="bold" fill="#0e8f8d" text-anchor="start">3.</text>
+<text x="600.0" y="862.4" font-size="15" font-family="Noto Sans SC" font-weight="bold" fill="#111827" text-anchor="start">商家库存：</text>
+<text x="675.0" y="862.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#475569" text-anchor="start">借助共享仓实现精准商家库存管理，</text>
+<rect x="973.0" y="539.0" width="391.0" height="154.0" rx="14" fill="url(#gt)" stroke="#9fd3d1" stroke-width="1"/>
+<text x="1168.5" y="568.5" font-size="18" font-family="Noto Sans SC" font-weight="bold" fill="#0b5f5e" text-anchor="middle">销售系统</text>
+<rect x="987.0" y="585.0" width="114.0" height="42.0" rx="9" fill="#fdeebd" stroke="#e6c76a" stroke-width="1"/>
+<text x="1044.0" y="611.2" font-size="14.5" font-family="Noto Sans SC" font-weight="normal" fill="#1f2937" text-anchor="middle">订单管理</text>
+<rect x="1111.0" y="585.0" width="114.0" height="42.0" rx="9" fill="#fdeebd" stroke="#e6c76a" stroke-width="1"/>
+<text x="1168.0" y="611.2" font-size="14.5" font-family="Noto Sans SC" font-weight="normal" fill="#1f2937" text-anchor="middle">政策管理</text>
+<rect x="1235.0" y="585.0" width="114.0" height="42.0" rx="9" fill="#f6faff" stroke="#a9c7f2" stroke-width="1"/>
+<text x="1292.0" y="611.2" font-size="14.5" font-family="Noto Sans SC" font-weight="normal" fill="#1f2937" text-anchor="middle">回款管理</text>
+<rect x="987.0" y="639.0" width="114.0" height="42.0" rx="9" fill="#f6faff" stroke="#a9c7f2" stroke-width="1"/>
+<text x="1044.0" y="665.2" font-size="14.5" font-family="Noto Sans SC" font-weight="normal" fill="#1f2937" text-anchor="middle">样机管理</text>
+<rect x="1111.0" y="639.0" width="114.0" height="42.0" rx="9" fill="#f6faff" stroke="#a9c7f2" stroke-width="1"/>
+<text x="1168.0" y="665.2" font-size="14.5" font-family="Noto Sans SC" font-weight="normal" fill="#1f2937" text-anchor="middle">退换货管理</text>
+<rect x="1235.0" y="639.0" width="114.0" height="42.0" rx="9" fill="#f6faff" stroke="#a9c7f2" stroke-width="1"/>
+<text x="1292.0" y="665.2" font-size="14.5" font-family="Noto Sans SC" font-weight="normal" fill="#1f2937" text-anchor="middle">安装管理</text>
+<text x="981.0" y="730.4" font-size="15" font-family="Noto Sans SC" font-weight="bold" fill="#0e8f8d" text-anchor="start">1.</text>
+<text x="1003.0" y="730.4" font-size="15" font-family="Noto Sans SC" font-weight="bold" fill="#111827" text-anchor="start">用户体验：</text>
+<text x="1078.0" y="730.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#475569" text-anchor="start">经销商操作入口分散，需在多套系统间</text>
+<text x="1003.0" y="754.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#475569" text-anchor="start">频繁切换，流程割裂、效率低下，整体体验欠佳。</text>
+<text x="981.0" y="784.4" font-size="15" font-family="Noto Sans SC" font-weight="bold" fill="#0e8f8d" text-anchor="start">2.</text>
+<text x="1003.0" y="784.4" font-size="15" font-family="Noto Sans SC" font-weight="bold" fill="#111827" text-anchor="start">系统架构：</text>
+<text x="1078.0" y="784.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#475569" text-anchor="start">平台技术架构老化，稳定性存在隐患，</text>
+<text x="1003.0" y="808.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#475569" text-anchor="start">扩展性受限，难以支撑业务持续发展。</text>
+<text x="981.0" y="838.4" font-size="15" font-family="Noto Sans SC" font-weight="bold" fill="#0e8f8d" text-anchor="start">3.</text>
+<text x="1003.0" y="838.4" font-size="15" font-family="Noto Sans SC" font-weight="bold" fill="#111827" text-anchor="start">订单透明：</text>
+<text x="1078.0" y="838.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#475569" text-anchor="start">订单履约全流程透明度不足，经销商无</text>
+<text x="1003.0" y="862.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#475569" text-anchor="start">法实时掌握订单状态，信息反馈滞后。</text>
+<rect x="1376.0" y="539.0" width="391.0" height="154.0" rx="14" fill="url(#gt)" stroke="#9fd3d1" stroke-width="1"/>
+<text x="1571.5" y="568.5" font-size="18" font-family="Noto Sans SC" font-weight="bold" fill="#0b5f5e" text-anchor="middle">服务系统</text>
+<rect x="1390.0" y="585.0" width="114.0" height="42.0" rx="9" fill="#f6faff" stroke="#a9c7f2" stroke-width="1"/>
+<text x="1447.0" y="611.2" font-size="14.5" font-family="Noto Sans SC" font-weight="normal" fill="#1f2937" text-anchor="middle">服务商管理</text>
+<rect x="1514.0" y="585.0" width="114.0" height="42.0" rx="9" fill="#fdeebd" stroke="#e6c76a" stroke-width="1"/>
+<text x="1571.0" y="611.2" font-size="14.5" font-family="Noto Sans SC" font-weight="normal" fill="#1f2937" text-anchor="middle">售后管理</text>
+<rect x="1638.0" y="585.0" width="114.0" height="42.0" rx="9" fill="#f6faff" stroke="#a9c7f2" stroke-width="1"/>
+<text x="1695.0" y="611.2" font-size="14.5" font-family="Noto Sans SC" font-weight="normal" fill="#1f2937" text-anchor="middle">配件管理</text>
+<rect x="1390.0" y="639.0" width="114.0" height="42.0" rx="9" fill="#fde0df" stroke="#eea5a2" stroke-width="1"/>
+<text x="1447.0" y="665.2" font-size="14.5" font-family="Noto Sans SC" font-weight="normal" fill="#1f2937" text-anchor="middle">AI智能客服</text>
+<rect x="1514.0" y="639.0" width="114.0" height="42.0" rx="9" fill="#f6faff" stroke="#a9c7f2" stroke-width="1"/>
+<text x="1571.0" y="665.2" font-size="14.5" font-family="Noto Sans SC" font-weight="normal" fill="#1f2937" text-anchor="middle">结算管理</text>
+<rect x="1638.0" y="639.0" width="114.0" height="42.0" rx="9" fill="#fdeebd" stroke="#e6c76a" stroke-width="1"/>
+<text x="1695.0" y="665.2" font-size="14.5" font-family="Noto Sans SC" font-weight="normal" fill="#1f2937" text-anchor="middle">增值服务</text>
+<text x="1384.0" y="730.4" font-size="15" font-family="Noto Sans SC" font-weight="bold" fill="#0e8f8d" text-anchor="start">1.</text>
+<text x="1406.0" y="730.4" font-size="15" font-family="Noto Sans SC" font-weight="bold" fill="#111827" text-anchor="start">链路断裂：</text>
+<text x="1481.0" y="730.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#475569" text-anchor="start">一套业务分散在多个系统，数据链路断</text>
+<text x="1406.0" y="754.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#475569" text-anchor="start">裂，业务管理与服务商机转化难度大</text>
+<text x="1384.0" y="784.4" font-size="15" font-family="Noto Sans SC" font-weight="bold" fill="#0e8f8d" text-anchor="start">2.</text>
+<text x="1406.0" y="784.4" font-size="15" font-family="Noto Sans SC" font-weight="bold" fill="#111827" text-anchor="start">精度不足：</text>
+<text x="1481.0" y="784.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#475569" text-anchor="start">电子围栏精度不足，派工效率受影响</text>
+<text x="1384.0" y="814.4" font-size="15" font-family="Noto Sans SC" font-weight="bold" fill="#0e8f8d" text-anchor="start">3.</text>
+<text x="1406.0" y="814.4" font-size="15" font-family="Noto Sans SC" font-weight="bold" fill="#111827" text-anchor="start">AI能力：</text>
+<text x="1465.6" y="814.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#475569" text-anchor="start">智能客服未引入大模型，排查信息未传递</text>
+<text x="1406.0" y="838.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#475569" text-anchor="start">后端，现场处置依赖手工</text>
+<rect x="1779.0" y="539.0" width="391.0" height="154.0" rx="14" fill="url(#gt)" stroke="#9fd3d1" stroke-width="1"/>
+<text x="1974.5" y="568.5" font-size="18" font-family="Noto Sans SC" font-weight="bold" fill="#0b5f5e" text-anchor="middle">用户洞察/会员</text>
+<rect x="1793.0" y="585.0" width="114.0" height="42.0" rx="9" fill="#f6faff" stroke="#a9c7f2" stroke-width="1"/>
+<text x="1850.0" y="611.2" font-size="14.5" font-family="Noto Sans SC" font-weight="normal" fill="#1f2937" text-anchor="middle">用户声音洞察</text>
+<rect x="1917.0" y="585.0" width="114.0" height="42.0" rx="9" fill="#fde0df" stroke="#eea5a2" stroke-width="1"/>
+<text x="1974.0" y="611.2" font-size="14.5" font-family="Noto Sans SC" font-weight="normal" fill="#1f2937" text-anchor="middle">用户画像洞察</text>
+<rect x="2041.0" y="585.0" width="114.0" height="42.0" rx="9" fill="#fde0df" stroke="#eea5a2" stroke-width="1"/>
+<text x="2098.0" y="611.2" font-size="14.5" font-family="Noto Sans SC" font-weight="normal" fill="#1f2937" text-anchor="middle">用户资产管理</text>
+<rect x="1793.0" y="639.0" width="114.0" height="42.0" rx="9" fill="#dde2f8" stroke="#a7b2e6" stroke-width="1"/>
+<text x="1850.0" y="665.2" font-size="14.5" font-family="Noto Sans SC" font-weight="normal" fill="#1f2937" text-anchor="middle">会员管理</text>
+<rect x="1917.0" y="639.0" width="114.0" height="42.0" rx="9" fill="#fdeebd" stroke="#e6c76a" stroke-width="1"/>
+<text x="1974.0" y="665.2" font-size="14.5" font-family="Noto Sans SC" font-weight="normal" fill="#1f2937" text-anchor="middle">用户体验管理</text>
+<text x="1787.0" y="730.4" font-size="15" font-family="Noto Sans SC" font-weight="bold" fill="#0e8f8d" text-anchor="start">1.</text>
+<text x="1809.0" y="730.4" font-size="15" font-family="Noto Sans SC" font-weight="bold" fill="#111827" text-anchor="start">用户画像洞察缺乏数据支撑。</text>
+<text x="2004.0" y="730.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#475569" text-anchor="start">缺少会员画像与需求</text>
+<text x="1809.0" y="754.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#475569" text-anchor="start">洞察工具，无会员数据支撑精准洞察。</text>
+<text x="1787.0" y="784.4" font-size="15" font-family="Noto Sans SC" font-weight="bold" fill="#0e8f8d" text-anchor="start">2.</text>
+<text x="1809.0" y="784.4" font-size="15" font-family="Noto Sans SC" font-weight="bold" fill="#111827" text-anchor="start">会员体系与活动营销空白。</text>
+<text x="1989.0" y="784.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#475569" text-anchor="start">无会员等级/积分/权益/</text>
+<text x="1809.0" y="808.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#475569" text-anchor="start">生命周期；活动营销、拉新均无系统支撑，难以形</text>
+<text x="1809.0" y="832.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#475569" text-anchor="start">成拉新-激活-留存-推荐闭环。</text>
+<text x="1787.0" y="862.4" font-size="15" font-family="Noto Sans SC" font-weight="bold" fill="#0e8f8d" text-anchor="start">3.</text>
+<text x="1809.0" y="862.4" font-size="15" font-family="Noto Sans SC" font-weight="bold" fill="#111827" text-anchor="start">全旅程体验线上化不足。</text>
+<text x="1974.0" y="862.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#475569" text-anchor="start">售前（展厅/门店）、售中</text>
+<text x="1809.0" y="886.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#475569" text-anchor="start">（订单/安装/交付）未接入用户端；售后保养/满意</text>
+<text x="1809.0" y="910.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#475569" text-anchor="start">度/保修政策待建设，数据分散在多个系统。</text>
+<rect x="0.0" y="955.0" width="2185.0" height="204.0" rx="16" fill="#ffffff" stroke="#d8e0ea" stroke-width="1" filter="url(#sh)"/>
+<rect x="20.0" y="973.0" width="124.0" height="46.0" rx="10" fill="#f7effc" stroke="#8e44b8" stroke-width="1.2"/>
+<text x="33.9" y="1002.5" font-size="18" font-family="Noto Sans SC" font-weight="bold" fill="#8e44b8" text-anchor="start">DA</text>
+<text x="58.2" y="1002.5" font-size="18" font-family="Noto Sans SC" font-weight="bold" fill="#1f2937" text-anchor="start">数据架构</text>
+<rect x="20" y="1072.0" width="4" height="18" rx="2" fill="#8e44b8"/>
+<text x="32.0" y="1086.8" font-size="16" font-family="Noto Sans SC" font-weight="bold" fill="#1f2937" text-anchor="start">共性问题</text>
+<rect x="167.0" y="973.0" width="986.0" height="40.0" rx="10" fill="#f0e3f8" stroke="#d9bfeb" stroke-width="1"/>
+<text x="660.0" y="999.5" font-size="18" font-family="Noto Sans SC" font-weight="bold" fill="#5e2384" text-anchor="middle">数据治理</text>
+<rect x="167.0" y="1021.0" width="986.0" height="120.0" rx="12" fill="#fdf9ff" stroke="#ecdcf5" stroke-width="1"/>
+<circle cx="200.0" cy="1051.0" r="3" fill="#8e44b8"/>
+<text x="215.0" y="1056.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#475569" text-anchor="start">指标自动化水平低，跨业务链路存在数据断点，自建看板与统一门店管理口径不一致。</text>
+<circle cx="200.0" cy="1081.0" r="3" fill="#8e44b8"/>
+<text x="215.0" y="1086.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#475569" text-anchor="start">客户主数据需要加强治理，部分维度标准、口径不统一，查重治理落地不足。</text>
+<circle cx="200.0" cy="1111.0" r="3" fill="#8e44b8"/>
+<text x="215.0" y="1116.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#475569" text-anchor="start">用户、会员数据沉淀不足，数据责任和问题闭环机制缺失（设备数据/舆情等）。</text>
+<rect x="1166.0" y="973.0" width="986.0" height="40.0" rx="10" fill="#f0e3f8" stroke="#d9bfeb" stroke-width="1"/>
+<text x="1659.0" y="999.5" font-size="18" font-family="Noto Sans SC" font-weight="bold" fill="#5e2384" text-anchor="middle">知识管理</text>
+<rect x="1166.0" y="1021.0" width="986.0" height="120.0" rx="12" fill="#fdf9ff" stroke="#ecdcf5" stroke-width="1"/>
+<circle cx="1199.0" cy="1051.0" r="3" fill="#8e44b8"/>
+<text x="1214.0" y="1056.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#475569" text-anchor="start">销售到回款的知识体系未建立，相关知识未系统入库</text>
+<circle cx="1199.0" cy="1081.0" r="3" fill="#8e44b8"/>
+<text x="1214.0" y="1086.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#475569" text-anchor="start">产品知识未纳入客服服务，产品卖点等未进入智能应用范围，因此未系统化治理</text>
+<circle cx="1199.0" cy="1111.0" r="3" fill="#8e44b8"/>
+<text x="1214.0" y="1116.4" font-size="15" font-family="Noto Sans SC" font-weight="normal" fill="#475569" text-anchor="start">已入库知识使用率不高（覆盖率 66%，使用率 33%），无法保证质量</text>
+<rect x="1195.0" y="1181.0" width="87.0" height="40.0" rx="9" fill="#dde2f8" stroke="#a7b2e6" stroke-width="1"/>
+<text x="1238.5" y="1206.2" font-size="14.5" font-family="Noto Sans SC" font-weight="normal" fill="#1f2937" text-anchor="middle">待建设</text>
+<rect x="1294" y="1184" width="2" height="34" rx="1" fill="#cbd5e1"/>
+<text x="1305.0" y="1200.5" font-size="12.5" font-family="Noto Sans SC" font-weight="normal" fill="#64748b" text-anchor="start">已有应用不适用，</text>
+<text x="1305.0" y="1217.5" font-size="12.5" font-family="Noto Sans SC" font-weight="normal" fill="#64748b" text-anchor="start">需要新建</text>
+<rect x="1448.0" y="1181.0" width="87.0" height="40.0" rx="9" fill="#fde0df" stroke="#eea5a2" stroke-width="1"/>
+<text x="1491.5" y="1206.2" font-size="14.5" font-family="Noto Sans SC" font-weight="normal" fill="#1f2937" text-anchor="middle">待推广</text>
+<rect x="1547" y="1184" width="2" height="34" rx="1" fill="#cbd5e1"/>
+<text x="1558.0" y="1200.5" font-size="12.5" font-family="Noto Sans SC" font-weight="normal" fill="#64748b" text-anchor="start">已有应用，需要推</text>
+<text x="1558.0" y="1217.5" font-size="12.5" font-family="Noto Sans SC" font-weight="normal" fill="#64748b" text-anchor="start">广到业务单元</text>
+<rect x="1701.0" y="1181.0" width="87.0" height="40.0" rx="9" fill="#fdeebd" stroke="#e6c76a" stroke-width="1"/>
+<text x="1744.5" y="1206.2" font-size="14.5" font-family="Noto Sans SC" font-weight="normal" fill="#1f2937" text-anchor="middle">待优化</text>
+<rect x="1800" y="1184" width="2" height="34" rx="1" fill="#cbd5e1"/>
+<text x="1811.0" y="1200.5" font-size="12.5" font-family="Noto Sans SC" font-weight="normal" fill="#64748b" text-anchor="start">已有应用，需要根</text>
+<text x="1811.0" y="1217.5" font-size="12.5" font-family="Noto Sans SC" font-weight="normal" fill="#64748b" text-anchor="start">据需求优化</text>
+<rect x="1954.0" y="1181.0" width="87.0" height="40.0" rx="9" fill="#f6faff" stroke="#a9c7f2" stroke-width="1"/>
+<text x="1997.5" y="1206.2" font-size="14.5" font-family="Noto Sans SC" font-weight="normal" fill="#1f2937" text-anchor="middle">已上线</text>
+<rect x="2053" y="1184" width="2" height="34" rx="1" fill="#cbd5e1"/>
+<text x="2064.0" y="1205.5" font-size="12.5" font-family="Noto Sans SC" font-weight="normal" fill="#64748b" text-anchor="start">应用已上线运营</text>
+</g></svg>

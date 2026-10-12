@@ -1,0 +1,2 @@
+# PPT 回归用例：名称  .pptx 路径（相对仓库根）。真实业务 PPT 存放在 _runs/fixtures/pptx/（不入库）。
+sample-achievements   _runs/fixtures/pptx/测试案例.pptx
