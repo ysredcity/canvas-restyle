@@ -30,8 +30,8 @@ PROJECT_CONTEXT.md                  跨会话上下文台账（单一事实源�
 python3 skills/canvas-restyle/scripts/restyle.py "<文件.pptx>" --slug demo        # PPT：产出（优化版）.pptx + 对比图
 python3 skills/canvas-restyle/scripts/restyle.py "<飞书画板链接>" --slug demo      # 飞书：产出 diagram.svg（发布另跑 publish.py）
 ```
-依赖：`python3`；飞书另需 `lark-cli`（已登录）、`npx`；PPT 另需 `python-pptx==1.0.2`，渲染检查需 `pypdfium2==4.30.0`、
-Pillow 与 Microsoft PowerPoint（macOS）。
+依赖：`python3`；飞书另需 `lark-cli`（已登录）、`npx`；PPT 另需 `python-pptx==1.0.2`（PowerPoint / WPS 生成的 .pptx 均可）。
+预览图可选：装了 Microsoft PowerPoint（macOS）、`pypdfium2==4.30.0`、Pillow 时自动渲染，否则跳过，不必为此安装 PowerPoint。
 
 ## 治理
 - 改动规则与回归要求：[`CONTRIBUTING.md`](CONTRIBUTING.md)

@@ -2,6 +2,11 @@
 
 面向 skill 使用者，只记能力变化。维护过程见 `PROJECT_CONTEXT.md`。
 
+## [0.2.1] - 2026-10-13
+### Fixed
+- PPT 预览渲染改为可选：没有 Microsoft PowerPoint 或渲染依赖时自动跳过并提示用 WPS / PowerPoint 打开查看，不再报错或引导安装 PowerPoint。
+- 文档写明支持 WPS 生成的 `.pptx`。
+
 ## [0.2.0] - 2026-10-13
 定位从「飞书画板」扩展为「自由画布类内容」，skill 改名 `canvas-restyle`（原 `feishu-whiteboard-restyle`）。
 ### Added

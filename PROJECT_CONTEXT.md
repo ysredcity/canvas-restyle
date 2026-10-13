@@ -34,6 +34,8 @@ skill 目前只开发、**未安装**。
 - PPT 饱和色不能套飞书的 soft/solid（会变成淡底或深褐），所以色板加了 `accent` 深浅；飞书引擎不使用它。
 - **渲染**：PowerPoint 沙盒只能写自己的容器目录 `~/Library/Containers/com.microsoft.Powerpoint/Data/Documents`，
   且「另存为 PNG」静默失败；可行路径是导出 PDF 到容器目录 → pypdfium2 转 PNG。Keynote 脚本报 -609 不可用；本机 swift 工具链损坏。
+- **渲染可选**（用户 2026-10-13 指出装了 WPS 却被引导装 PowerPoint）：PowerPoint 只用于自动预览；缺 PowerPoint / pypdfium2 / Pillow、
+  导出失败或 120 秒无响应时 `render.py` 跳过并提示用 WPS 打开，退出码 0。WPS Mac 12.1 无 AppleScript，不能自动渲染。WPS 生成的 .pptx 已支持。
 - Python `zipfile.writestr(info, data)` 会就地改 ZipInfo 的 CRC，复用原 ZipInfo 写新包会让原包后续读取报 CRC 错——apply.py 已改为新建 ZipInfo。
 - bash 里变量名紧贴全角字符（`$name（`）会被当成变量名一部分，要写 `${name}`。
 
@@ -68,4 +70,5 @@ _runs/                             历史产物 + registry.json + fixtures/pptx/
 - 2026-10-12 目录改名 feishu-whiteboard-restyle；产物移入 `_runs/`；建 skill 0.1.0（通用重绘引擎 + 参考模式 + 脚本 + 文档）与治理框架；7 例回归全部通过。
 - 2026-10-13 定位扩展为自由画布，改名 canvas-restyle 0.2.0；拆出核心层 + 飞书适配器（输出逐字节不变）；新增 PPT 适配器与统一入口；
   测试 PPT 从 docs/ 移到 `_runs/fixtures/pptx/`（真实业务内容不入库）；回归 10/10。
+- 2026-10-13 0.2.1：PPT 渲染改为可选并加超时，文档写明支持 WPS 生成的 .pptx、不引导安装 PowerPoint。
 - 2026-10-13 首次推送到公开仓库前脱敏：模板换虚构数据、注册表 token 移到本地文件、风格文档去内部链接、旧 steering 不入库；回归 10/10。

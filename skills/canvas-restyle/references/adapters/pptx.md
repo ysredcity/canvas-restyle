@@ -5,15 +5,18 @@
 
 ## 0. 准备
 - 只支持 `.pptx`。`.ppt` / `.key` 请用户先另存为 `.pptx`。
-- 依赖：`python-pptx==1.0.2`（含 lxml）；渲染检查另需 `pypdfium2==4.30.0`、Pillow，以及本机 Microsoft PowerPoint（macOS）。
-  没有 PowerPoint 时跳过渲染（`--no-render`），在交付时说明「未目检」。
+- PowerPoint 或 WPS 生成的 `.pptx` 都支持；改色与校验只读写文件本身，不依赖任何办公软件。
+- 依赖：`python-pptx==1.0.2`（含 lxml）。
+- 预览图（可选）：只有本机装了 Microsoft PowerPoint（macOS）且有 `pypdfium2==4.30.0`、Pillow 时才自动渲染；
+  否则 `render.py` 自动跳过并提示。**不要因为渲染去引导用户安装 PowerPoint**——WPS Mac 版没有脚本接口无法自动渲染，
+  此时请用户直接用 WPS 打开优化版查看，交付时说明「未自动目检」。
 - 运行目录根同飞书：默认 `./_runs`。
 
 ## 1. 一条命令跑完（推荐）
 ```bash
 python3 <skill>/scripts/restyle.py "<文件>.pptx" --slug <短名> [--brand "#00aaa6"|none]
 ```
-产出 `<run>/<原名>（优化版）.pptx`、`plan.json`、`render/compare-NN.png`（上原图、下优化版，每页一张）。
+产出 `<run>/<原名>（优化版）.pptx`、`plan.json`；能渲染时另有 `render/compare-NN.png`（上原图、下优化版，每页一张）。
 
 ## 2. 分步（需要调整方案时）
 ```bash
@@ -41,8 +44,8 @@ python3 $P/render.py "XX（优化版）.pptx" -o render --compare in.pptx
 ## 4. 检查（完成标准）
 1. `verify.py` 输出 `ok`：部件清单一致；幻灯片与主题以外的部件逐字节相同；每页 XML 抹掉颜色值后完全相同；逐页文字一致。
 2. `plan.json` 的 `warnings` 为空，或已向用户说明。
-3. 看一次 `render/compare-NN.png`（每页一张，只看一次）。
+3. 有对比图时看一次 `render/compare-NN.png`；渲染被跳过时请用户用 WPS / PowerPoint 打开优化版确认。
 
 ## 5. 交付时告诉用户
 优化版文件路径；颜色收敛情况（`converged`：哪些原色合并成了哪个新色）；品牌色；没有改的部分（中性色、图片、图表、字号）；
-校验结果；未验证项（如没有 PowerPoint 时未目检、Windows 上字体渲染差异）。
+校验结果；未验证项（如渲染被跳过时未自动目检；对比图由 PowerPoint 渲染，与 WPS 的字体渲染可能略有差异）。

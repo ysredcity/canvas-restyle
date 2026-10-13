@@ -1,11 +1,15 @@
 #!/usr/bin/env python3
-"""PPT 适配器 · 第 4 步：渲染每页 PNG 供目检（macOS + Microsoft PowerPoint）。
+"""PPT 适配器 · 第 4 步（可选）：渲染每页 PNG 供目检。
 
+渲染只是预览，不影响优化版文件。本机没有可脚本驱动的渲染器时自动跳过（退出码 0），
+提示用户直接用 WPS 或 PowerPoint 打开优化版查看。不要因此引导用户安装 PowerPoint。
+
+目前唯一可自动驱动的渲染器是 macOS 版 Microsoft PowerPoint（WPS Mac 版没有 AppleScript 接口）：
 PowerPoint 导出 PDF（受沙盒限制，只能写进它自己的容器目录），再用 pypdfium2 逐页转 PNG。
 给了 --compare 原文件时，额外生成「上：原图 / 下：优化版」的对比图，一页只需看一张。
 
 用法：python3 render.py 优化版.pptx -o <目录> [--compare 原文件.pptx] [--scale 1.2]
-依赖：pypdfium2、Pillow；本机装有 Microsoft PowerPoint。
+依赖（均可选）：pypdfium2、Pillow、Microsoft PowerPoint；缺任一项即跳过渲染。
 """
 import argparse
 import hashlib
@@ -15,11 +19,25 @@ import subprocess
 import time
 
 BOX = os.path.expanduser('~/Library/Containers/com.microsoft.Powerpoint/Data/Documents')
+APP = '/Applications/Microsoft PowerPoint.app'
+
+
+class Skip(Exception):
+    pass
+
+
+def unavailable():
+    """返回无法渲染的原因；能渲染时返回 None。"""
+    import importlib.util
+    import sys
+    if sys.platform != 'darwin': return '非 macOS'
+    if not os.path.isdir(APP) or not os.path.isdir(BOX): return '未安装 Microsoft PowerPoint'
+    miss = [m for m in ('pypdfium2', 'PIL') if importlib.util.find_spec(m) is None]
+    if miss: return f'缺少 Python 包 {"、".join(miss)}'
+    return None
 
 
 def to_pdf(pptx):
-    if not os.path.isdir(BOX):
-        raise SystemExit('未找到 Microsoft PowerPoint 的容器目录，无法渲染；请手动在 PowerPoint 里打开检查。')
     tag = hashlib.md5(os.path.abspath(pptx).encode()).hexdigest()[:8]
     pdf = os.path.join(BOX, f'canvas-restyle-{tag}.pdf')
     if os.path.exists(pdf): os.remove(pdf)
@@ -33,12 +51,17 @@ tell application "Microsoft PowerPoint"
   delay 1
   close active presentation saving no
 end tell'''
-    p = subprocess.run(['osascript', '-e', script], capture_output=True, text=True)
+    try:
+        p = subprocess.run(['osascript', '-e', script], capture_output=True, text=True, timeout=120)
+    except subprocess.TimeoutExpired:
+        if os.path.exists(pdf): os.remove(pdf)
+        raise Skip('PowerPoint 120 秒内无响应（可能有弹窗或文件被占用）')
     for _ in range(30):
         if os.path.exists(pdf) and os.path.getsize(pdf) > 0: break
         time.sleep(1)
-    if not os.path.exists(pdf):
-        raise SystemExit(f'PowerPoint 导出 PDF 失败：{p.stderr.strip()[:300]}')
+    if not os.path.exists(pdf) or os.path.getsize(pdf) == 0:
+        if os.path.exists(pdf): os.remove(pdf)
+        raise Skip(f'PowerPoint 导出 PDF 失败：{p.stderr.strip()[:300]}')
     return pdf
 
 
@@ -66,6 +89,16 @@ def main():
     ap.add_argument('pptx'); ap.add_argument('-o', '--out', required=True)
     ap.add_argument('--compare'); ap.add_argument('--scale', type=float, default=1.2)
     a = ap.parse_args()
+    why = unavailable()
+    if why:
+        print(f'SKIP render：{why}。渲染只是预览，优化版文件不受影响；请用 WPS 或 PowerPoint 打开优化版查看效果。'); return
+    try:
+        main_render(a)
+    except Skip as e:
+        print(f'SKIP render：{e}。请用 WPS 或 PowerPoint 打开优化版查看效果。')
+
+
+def main_render(a):
     new = render(a.pptx, a.out, 'new', a.scale)
     print('\n'.join(new))
     if a.compare:

@@ -1,6 +1,6 @@
 ---
 name: canvas-restyle
-version: 0.2.0
+version: 0.2.1
 description: >
   自由画布类内容的样式优化：飞书画板、PPT（.pptx）等，在不改内容、文字、元素位置与结构的前提下，
   统一配色、收敛近似色、理顺文字颜色层级，产出新文件 / 新画板（原件只读）。当用户要求「优化/美化这个画板或 PPT 的配色、
@@ -9,7 +9,7 @@ description: >
 metadata:
   requires:
     bins: ["python3"]
-    optional: ["lark-cli（飞书）", "npx（飞书检查器）", "Microsoft PowerPoint（PPT 渲染检查，macOS）"]
+    optional: ["lark-cli（飞书）", "npx（飞书检查器）", "Microsoft PowerPoint（仅用于自动渲染 PPT 预览图，没有就跳过；WPS 用户不必安装）"]
 ---
 
 # 画布样式优化（canvas-restyle）
@@ -25,7 +25,7 @@ metadata:
 | 输入 | 适配器 | 写回方式 | 完成标准 | 详细流程 |
 |---|---|---|---|---|
 | 飞书画板 / 带 blockToken 的文档链接 / token | 飞书 | raw 原位重绘为 SVG，写入新画板（飞书只能 SVG 导入） | check 0/0 → 文字一致 → 写入新画板 → 线上 raw 复核 | `references/adapters/feishu.md` |
-| `.pptx` | PPT | 在副本上原位改色（不重绘，保留母版、动画、图表） | `verify.py` ok（只改了颜色）→ 方案无警告 → 对比图看一次 | `references/adapters/pptx.md` |
+| `.pptx`（PowerPoint 或 WPS 生成均可） | PPT | 在副本上原位改色（不重绘，保留母版、动画、图表） | `verify.py` ok（只改了颜色）→ 方案无警告 → 有对比图则看一次 | `references/adapters/pptx.md` |
 | `.ppt` / `.key` | — | 请用户先另存为 `.pptx` | | |
 | draw.io、飞书幻灯片 | 未实现 | 告诉用户暂不支持 | | |
 
