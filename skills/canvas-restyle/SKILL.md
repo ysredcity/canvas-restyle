@@ -1,8 +1,8 @@
 ---
 name: canvas-restyle
-version: 0.2.1
+version: 1.0.3
 description: >
-  自由画布类内容的样式优化：飞书画板、PPT（.pptx）等，在不改内容、文字、元素位置与结构的前提下，
+  自由画布类内容的样式优化：飞书画板、PPT（.pptx）等，在不改内容、文字、元素数量、包含关系与阅读顺序的前提下，
   统一配色、收敛近似色、理顺文字颜色层级，产出新文件 / 新画板（原件只读）。当用户要求「优化/美化这个画板或 PPT 的配色、
   样式、排版」「统一这份 PPT 的颜色」「参考某画板的风格优化这个画板」时使用。所有工具共用同一套视觉原则，
   按工具特性分别落地。不负责：改内容或结构、从零制作、重新设计版式（重做 PPT 用 slide-maker，飞书画板绘制用 lark-whiteboard）。
@@ -16,23 +16,37 @@ metadata:
 
 ## 铁律（所有工具）
 1. **原件只读**。飞书写入新建文档里的新画板；PPT 输出 `<原名>（优化版）.pptx`。脚本会拒绝覆盖原件。
-2. **内容不变**：文字逐字保留，元素数量、位置、尺寸、层级不变；只改样式。
+2. **结构不变**：文字逐字保留，元素数量（不增删不合并）、包含关系与分组、阅读顺序（行列先后、左右上下）不变。
+   **排版可以调整**：对齐、间距、同组尺寸、字号分档、内边距属于样式，按档位放开（见下）。
 3. **同一套视觉原则**：见 `references/principles.md`。颜色决策统一来自 `scripts/core/`（色系归类、色板、品牌色锚定、文字颜色规则）。
 4. **不猜语义**：没有图例时不新增图例、不臆测颜色含义，只保留「同色同类、异色异类」。
 5. **完成标准按工具**（见下表），缺一不可；没验证的项在交付时说明。
+6. **模型只看 review 图**：优化前后完整分辨率图片用于交付，不直接传给模型；只读取最长边 1920px 的 `*.review.*`。
+   长画板需要看细节时生成切片并逐张、分轮查看，不能一次把全部切片传给模型。
+
+## 三档（用户不指定时用 standard）
+| 档位 | 做什么 | 什么时候用 |
+|---|---|---|
+| `conservative` | 只改配色，坐标 / 尺寸 / 字号 / 字体与原图一致 | 正式定稿、明确要求「一点都不要动版面」 |
+| **`standard`（默认）** | 配色 + 对齐吸附、行列等距、同组统一尺寸、字号收敛为 3–4 档、统一字体（默认微软雅黑）、最小内边距；文字放不下时最多缩字 10%，再不够就撑高整行 | 大多数场景；原图有错位、间距不均、字号杂乱时 |
+| `aggressive` | 文字一律按分档字号排，放不下直接撑高整行（不缩字） | 原图挤得厉害、容器明显装不下文字 |
+- 位移没有硬上限，报告里给出 `max_shift` 供参考；出现新的重叠或顺序变化时该组自动回退并写进报告。
+- 用户要求统一字体时用 `--font`，默认微软雅黑；原图字体不作为依据。
+- 飞书：线上 raw 不保留字体字段，画板按飞书自身字体显示，`--font` 只影响本地预览与换行测量；交付时说明。
 
 ## 按输入路由
 | 输入 | 适配器 | 写回方式 | 完成标准 | 详细流程 |
 |---|---|---|---|---|
-| 飞书画板 / 带 blockToken 的文档链接 / token | 飞书 | raw 原位重绘为 SVG，写入新画板（飞书只能 SVG 导入） | check 0/0 → 文字一致 → 写入新画板 → 线上 raw 复核 | `references/adapters/feishu.md` |
-| `.pptx`（PowerPoint 或 WPS 生成均可） | PPT | 在副本上原位改色（不重绘，保留母版、动画、图表） | `verify.py` ok（只改了颜色）→ 方案无警告 → 有对比图则看一次 | `references/adapters/pptx.md` |
+| 飞书画板 / 带 blockToken 的文档链接 / token | 飞书 | raw 重绘为 SVG，写入新画板（飞书只能 SVG 导入）；三档均支持 | check 0/0 → 文字一致 → 写入新画板 → 线上 raw 复核 | `references/adapters/feishu.md` |
+| `.pptx`（PowerPoint 或 WPS 生成均可） | PPT | 在副本上原位改色（**当前只改配色**，排版规整尚未实现，需要时如实告知用户） | `verify.py` ok（只改了颜色）→ 方案无警告 → 有对比图则看一次 | `references/adapters/pptx.md` |
 | `.ppt` / `.key` | — | 请用户先另存为 `.pptx` | | |
 | draw.io、飞书幻灯片 | 未实现 | 告诉用户暂不支持 | | |
 
 统一入口（读取 → 样式方案 → 落地 → 校验，不发布）：
 ```bash
-python3 <skill>/scripts/restyle.py "<文件.pptx | 飞书画板链接>" --slug <短名>
+python3 <skill>/scripts/restyle.py "<文件.pptx | 飞书画板链接>" --slug <短名> [--mode standard] [--font 微软雅黑]
 ```
+飞书画板若 standard 档未通过检查，入口会自动回退 conservative 并打印实际档位，交付时要说明。
 飞书画板确认效果后再跑 `scripts/adapters/feishu/publish.py`（写入无需逐次确认，用户已授权；只写新建画板）。
 
 ## 飞书：引擎选择
@@ -55,8 +69,8 @@ python3 <skill>/scripts/restyle.py "<文件.pptx | 飞书画板链接>" --slug <
 ## 文件索引（按需读取，不要一次全读）
 | 文件 | 何时读 |
 |---|---|
-| `references/principles.md` | 每次执行 |
-| `references/adapters/feishu.md` | 飞书画板；含调整手段、省上下文规则 |
+| `references/principles.md` | 每次执行；含「结构不变 / 排版可调」的边界 |
+| `references/adapters/feishu.md` | 飞书画板；含 review 图、长图切片、调整手段、省上下文规则 |
 | `references/adapters/feishu-roles.md` | 飞书引擎识别角色出错、需要 `--map` 或覆盖脚本时 |
 | `references/adapters/feishu-svg-constraints.md` | 飞书 `check.sh` 报错 / 手写 SVG 时 |
 | `references/adapters/feishu-reference-mode.md`、`references/styles/*.md` | 飞书参考模式 |

@@ -22,6 +22,9 @@ def family_of(h):
     hue, light, sat = v[0] * 360, v[1], v[2]
     if light > 0.97 and sat < 0.5: return 'neutral', 'white'
     if sat < 0.12 or (light > 0.93 and sat < 0.25): return 'neutral', ('solid' if light < 0.6 else 'soft')
+    # 近黑色：很深时即使带一点色相，看上去也是黑的（如飞书默认文字色 #1f2329，饱和度 0.14）。
+    # 深彩色（如深青 #0f5c6e，饱和度 0.76）饱和度高，不受影响。
+    if light < 0.25 and sat < 0.35: return 'neutral', 'solid'
     if hue < 15 or hue >= 345: fam = 'red'
     elif hue < 65: fam = 'amber'
     elif hue < 160: fam = 'green'

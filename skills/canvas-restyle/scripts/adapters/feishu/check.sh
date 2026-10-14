@@ -26,6 +26,16 @@ sys.exit(0 if (e == 0 and w == 0) else 1)
 PY
 RC=$?
 if [[ "${2:-}" == "--png" ]]; then
-  "${CLI[@]}" -i "$SVG" -f svg -o "${SVG%.svg}.png" >/dev/null 2>&1 && echo "png: ${SVG%.svg}.png"
+  PNG="${SVG%.svg}.png"
+  REVIEW="${SVG%.svg}.review.png"
+  HERE=$(cd "$(dirname "$0")" && pwd)
+  if "${CLI[@]}" -i "$SVG" -f svg -o "$PNG" >/dev/null 2>&1; then
+    echo "png: $PNG"
+    if R=$(python3 "$HERE/../../core/review_image.py" "$PNG" -o "$REVIEW" 2>&1); then
+      echo "review: ${REVIEW}（最长边 <2000px，只把这张给模型）"
+    else
+      echo "review warning: $R（不要把超过 2000px 的完整 PNG 与其他图片一起发给模型）"
+    fi
+  fi
 fi
 exit $RC

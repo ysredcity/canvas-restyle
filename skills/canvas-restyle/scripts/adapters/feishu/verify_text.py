@@ -16,17 +16,19 @@ import sys
 from collections import Counter
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from lib import load_raw, node_text
+from lib import list_marker_chars, load_raw, node_text
 
 
 def norm(s):
     return [c for c in s if not c.isspace()]
 
 
-def raw_chars(path):
+def raw_chars(path, markers=False):
+    """markers=True 时把原画板富文本列表的序号 / 圆点也计入（重绘会把它们画出来）。"""
     c = Counter()
     for n in load_raw(path):
         for t in node_text(n): c.update(norm(t))
+        if markers: c.update(norm(list_marker_chars(n)))
     return c
 
 
@@ -41,8 +43,12 @@ def main():
     ap = argparse.ArgumentParser(); ap.add_argument('source'); ap.add_argument('candidate')
     ap.add_argument('--allow', default='', help='允许出现差异的字符')
     a = ap.parse_args()
-    src = raw_chars(a.source)
     cand = svg_chars(a.candidate) if a.candidate.endswith('.svg') else raw_chars(a.candidate)
+    src = raw_chars(a.source)
+    # 重绘画出了列表序号 / 圆点时，原画板一侧按同一规则计入（比旧版多出的只能是这些符号）
+    srcm = raw_chars(a.source, markers=True)
+    if srcm != src and not (cand - srcm) and (cand - src):
+        src = srcm
     allow = set(a.allow)
     missing = {k: v for k, v in (src - cand).items() if k not in allow}
     extra = {k: v for k, v in (cand - src).items() if k not in allow}

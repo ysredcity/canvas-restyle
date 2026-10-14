@@ -1,9 +1,12 @@
-# 回归用例：名称  raw 路径（相对仓库根）。raw 来自历史真实画板导出，存放在 _runs/（不入库）。
-# 新增类型的画板时，把它的 source/raw.json 加进来。
+# 回归用例：名称  raw 路径（相对仓库根）  [档位]。raw 来自历史真实画板导出，存放在 _runs/（不入库）。
+# 第三列省略时按 standard 档回归；写 conservative 表示该画板目前只能过保守档（原因记在 PROJECT_CONTEXT）。
+# 两档都会跑：conservative 必须与 _runs/baseline-1.0.1/ 逐字节一致（若存在基线）；标注档位的那一档必须 check 0/0 + 文字一致。
 roadmap-table      _runs/src13/raw.json
 swimlane-ccu       _runs/src15/raw.json
 swimlane-service   _runs/src16/raw.json
 info-board         _runs/src17/raw.json
-layered-user-ops   _runs/src18/raw.json
+layered-user-ops   _runs/src18/raw.json   conservative
 layered-ipd        _runs/src11/raw.json
 ops-board-raw      _runs/src4/raw.json
+plan-grid          _runs/fixtures/feishu/plan-grid.json
+ba-aa-da-gap       _runs/fixtures/feishu/ba-aa-da-gap.json

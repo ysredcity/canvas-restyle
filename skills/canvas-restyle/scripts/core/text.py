@@ -41,7 +41,30 @@ def text_width(t, fs, bold=False):
     return sum(fs * (1 if ord(ch) > 255 else (0.3 if ch == ' ' else (0.62 if bold else 0.56))) for ch in t)
 
 
+STRICT = False      # True 时换行用「实测宽度」与「每字 1em 的保守估算」的较大值
+                    # —— whiteboard-cli 的检查器把每个字符都按全角算，ASCII 多的行会被它判成溢出。
+
+
+SAFETY_BOLD = 1.18  # 检查器对粗体约按 1.17em 估宽（实测：37 个 16px 粗体汉字需 ≈690px），留一点余量
+
+
+def chk_width(t, fs, bold=False):
+    """检查器口径的文字宽度：每个字符按 1em 计，空格按 0.5em；粗体再留 SAFETY_BOLD 余量。"""
+    return fs * sum(0.5 if ch == ' ' else 1 for ch in t) * (SAFETY_BOLD if bold else 1.0)
+
+
+def eff_width(t, fs, bold=False):
+    """用于换行决策的宽度。"""
+    w = text_width(t, fs, bold)
+    return max(w, chk_width(t, fs, bold)) if STRICT else w
+
+
 NO_LINE_START = '，。、；：！？）)】」』》,.;:!?%'
+
+
+def tokens(t):
+    """换行词元：英文/数字串不拆开。"""
+    return re.findall(r'[A-Za-z0-9_.%+-]+|\s+|.', t)
 
 
 def wrap(t, w, fs, bold=False):
@@ -49,7 +72,7 @@ def wrap(t, w, fs, bold=False):
     toks = re.findall(r'[A-Za-z0-9_.%+-]+|\s+|.', t)
     lines, cur = [], ''
     for tk in toks:
-        if cur and text_width(cur + tk, fs, bold) > w:
+        if cur and eff_width(cur + tk, fs, bold) > w:
             lines.append(cur.rstrip()); cur = tk.lstrip()
         else:
             cur += tk
@@ -68,7 +91,7 @@ def bwrap(t, w, fs, bold=False):
     while ww >= w * 0.55:
         m = wrap(t, ww, fs, bold)
         if len(m) > len(base): break
-        ws = [text_width(x, fs, bold) for x in m]
+        ws = [eff_width(x, fs, bold) for x in m]
         if max(ws) - min(ws) < bd: best, bd = m, max(ws) - min(ws)
         ww -= 2
     return best
@@ -82,7 +105,7 @@ def layout_text(t, w, h, fs, bold=False, min_fs=10, lh=1.4):
         for p in paras:
             lines += bwrap(p, w, fs, bold) if p.strip() else ['']
         fits_h = len(lines) * fs * lh <= h + fs * 0.4
-        fits_w = all(text_width(l, fs, bold) <= w + 1 for l in lines)   # 不可断的长词也要放得下
+        fits_w = all(eff_width(l, fs, bold) <= w + 1 for l in lines)   # 不可断的长词也要放得下
         if fs <= min_fs or (fits_h and fits_w):
             return lines, fs
         fs -= 0.5

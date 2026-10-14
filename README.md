@@ -5,7 +5,7 @@
 
 - **skill 本体**：[`skills/canvas-restyle/`](skills/canvas-restyle/SKILL.md)（目前只开发，未安装）
 - **架构**：核心层（`scripts/core/`，与工具无关的样式决策）+ 适配器（`scripts/adapters/<工具>/`，各自的读取与写回）
-- **已支持**：飞书画板（raw 重绘为 SVG 写入新画板）、PPT（副本原位改色）；draw.io、飞书幻灯片列为后续适配器
+- **已支持**：飞书画板（raw 重绘为 SVG 写入新画板，配色 + 排版规整三档）、PPT（副本原位改色，暂不含排版规整）；draw.io、飞书幻灯片列为后续适配器
 
 ## 目录
 ```
@@ -15,7 +15,7 @@ skills/canvas-restyle/              skill 本体（随 skill 分发的只有这�
   references/adapters/              各工具的流程与约束（feishu*.md、pptx.md）
   references/palette.md · styles/   色板说明；飞书模板风格经验
   scripts/restyle.py                统一入口（按输入类型分发）
-  scripts/core/                     色系归类、色板、品牌色锚定、文字颜色、文字测量、几何
+  scripts/core/                     色系归类、色板、排版、文字测量、几何、模型查看图生成
   scripts/adapters/feishu/          export / redraw / check / verify_text / publish / extract_style
   scripts/adapters/pptx/            plan / apply / verify / render
   templates/                        飞书数据驱动模板（ops-board、arch-ba-aa-da）+ 注册表
@@ -28,10 +28,12 @@ PROJECT_CONTEXT.md                  跨会话上下文台账（单一事实源�
 ## 快速试用（开发仓库内）
 ```bash
 python3 skills/canvas-restyle/scripts/restyle.py "<文件.pptx>" --slug demo        # PPT：产出（优化版）.pptx + 对比图
-python3 skills/canvas-restyle/scripts/restyle.py "<飞书画板链接>" --slug demo      # 飞书：产出 diagram.svg（发布另跑 publish.py）
+python3 skills/canvas-restyle/scripts/restyle.py "<飞书画板链接>" --slug demo      # 飞书：产出 diagram.svg + 1920px review 图（发布另跑 publish.py）
+# 飞书默认 standard 档（配色 + 对齐/等距/字号分档/统一字体）；--mode conservative 只改配色，--mode aggressive 再按需撑高行
 ```
 依赖：`python3`；飞书另需 `lark-cli`（已登录）、`npx`；PPT 另需 `python-pptx==1.0.2`（PowerPoint / WPS 生成的 .pptx 均可）。
 预览图可选：装了 Microsoft PowerPoint（macOS）、`pypdfium2==4.30.0`、Pillow 时自动渲染，否则跳过，不必为此安装 PowerPoint。
+飞书图片自动保留完整图，并生成最长边 1920px 的 `*.review.*` 供模型查看；长图可用 `scripts/core/review_image.py --tiles-dir` 切片。
 
 ## 治理
 - 改动规则与回归要求：[`CONTRIBUTING.md`](CONTRIBUTING.md)

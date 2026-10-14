@@ -1,12 +1,17 @@
 #!/usr/bin/env python3
 """飞书画板适配器：raw 原位重绘引擎（飞书的默认引擎）。
 
-读取飞书画板 raw 导出，保持每个节点的位置、尺寸、文字与层级，只按「角色 + 原色色系」
-重新配色、统一字号层级与对齐，输出可被 whiteboard-cli 导入的 SVG。
+读取飞书画板 raw 导出，保持文字、元素数量、包含关系与阅读顺序，重新配色并规整排版，
+输出可被 whiteboard-cli 导入的 SVG。
+
+三档（--mode）：
+  conservative  只改配色，坐标/尺寸/字号与原图一致（0.2.x 行为）
+  standard（默认）加上对齐吸附、行列等距、同组统一尺寸、字号分档（3–4 档）、统一字体与最小内边距
+  aggressive    再加「文字放不下时撑高整行」
 
 用法：
-  python3 redraw.py raw.json -o diagram.svg [--style style.json] [--report report.json]
-                    [--map "#e8f8f3=teal/soft" ...] [--scale 0.5]
+  python3 redraw.py raw.json -o diagram.svg [--mode standard] [--font 微软雅黑] [--style style.json]
+                    [--report report.json] [--map "#e8f8f3=teal/soft" ...] [--scale 0.5]
 
 角色：container（包含其他形状的形状 / section）、card（带文字或无文字的叶子形状）、step（流程箭头形状）、
      table、text（独立文本）、connector、image（SVG 小图标，如箭头三角）。
@@ -19,9 +24,13 @@ import statistics
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from lib import (Svg, abs_box, family_of, index, layout_text, load_raw, text_width)
+from lib import (Svg, abs_box, family_of, hex2rgb, index, layout_text, load_raw, rich_lines, text_width)
+from core.color import mix
+import core.text as core_text
 from core.geom import inside, overlap_ratio
+from core.layout import normalize, rows_of, structure_ok
 from core.palette import Mapper, load_style, parse_maps, text_color
+from core.typography import pick_font, report as fs_report, tier_sizes
 
 PAD = 40
 LINE_W = {'extra_narrow': 1, 'narrow': 1.4, 'medium': 2, 'wide': 3, 'extra_wide': 4}
@@ -29,10 +38,15 @@ LINE_W = {'extra_narrow': 1, 'narrow': 1.4, 'medium': 2, 'wide': 3, 'extra_wide'
 
 # ================================================================ 样式（决策在 core.palette）
 def fill_of(n):
+    """填充色。半透明填充（< 95%）按「叠在白底上的观感色」取色：37% 的 #00aaa9 看上去是浅青，不是深青。"""
     s = n.get('style') or {}
     f = s.get('fill_color')
-    if not f or (s.get('fill_opacity') is not None and s['fill_opacity'] < 15): return None
-    return f.lower()
+    op = s.get('fill_opacity')
+    if not f or (op is not None and op < 15): return None
+    f = f.lower()
+    if op is not None and op < 95 and hex2rgb(f):
+        f = mix(f, '#ffffff', 1 - op / 100)
+    return f
 
 
 def border_of(n):
@@ -57,11 +71,14 @@ def classify(nodes, D):
         has_child = any(parent.get(m['id']) == n['id'] for m in shapes)
         kind = (n.get('composite_shape') or {}).get('type', '')
         op = (n.get('style') or {}).get('fill_opacity')
-        covers = any(m is not n and overlap_ratio(B[m['id']], b2) > 0 for m in shapes for b2 in [B[n['id']]]
-                     if B[m['id']][2] * B[m['id']][3] < b2[2] * b2[3])
+        b2 = B[n['id']]
+        under = [m for m in shapes if m is not n and overlap_ratio(B[m['id']], b2) > 0 and B[m['id']][2] * B[m['id']][3] < b2[2] * b2[3]]
+        # 遮罩 = 半透明且「压在」被覆盖形状之上（z 更高）。半透明但垫在下面的只是浅色容器底，不是遮罩。
+        z = n.get('z_index', 0)
+        covers = bool(under) and sum(1 for m in under if z > m.get('z_index', 0)) * 2 >= len(under)
         if n['type'] == 'section': role[n['id']] = 'container'
-        elif op is not None and 15 <= op < 95 and covers: role[n['id']] = 'overlay'
         elif kind.startswith('step'): role[n['id']] = 'step'
+        elif op is not None and 15 <= op < 95 and covers: role[n['id']] = 'overlay'
         elif has_child: role[n['id']] = 'container'
         else: role[n['id']] = 'card'
     for n in nodes:
@@ -76,21 +93,223 @@ def classify(nodes, D):
 
 
 # ================================================================ 绘制
+SHAPE_ROLES = ('card', 'container', 'step', 'overlay')
+MIN_PAD = 10            # 文字与容器边缘的最小间距（标准档）
+MAX_SHRINK = 0.10       # 标准档：分档字号最多缩 10%，再放不下就撑高整行
+
+
 class Painter:
-    def __init__(self, nodes, st, overrides, scale=None):
+    def __init__(self, nodes, st, overrides, scale=None, mode='standard', font=None, tiers=4):
         self.nodes, self.st = nodes, st
         self.D = index(nodes)
         self.B, self.role, self.depth, self.parent = classify(nodes, self.D)
         self.M = Mapper(st, overrides)
         self.warn = []
+        self.mode = mode
+        core_text.STRICT = mode != 'conservative'      # 换行按检查器口径，避免 text-overflow 误报
+        self.layout_info = {}
+        self.FS = {}
+        self.font = pick_font(font) if (font or mode != 'conservative') else Svg.FONT
+        if mode != 'conservative':
+            self.FS = self.tier_fonts(tiers)
+            self.relayout()
         boxes = [b for i, b in self.B.items() if self.D[i]['type'] not in ('group',)]
         self.minx = min(b[0] for b in boxes); self.miny = min(b[1] for b in boxes)
         maxx = max(b[0] + b[2] for b in boxes); maxy = max(b[1] + b[3] for b in boxes)
         fss = [n['text']['font_size'] for n in nodes if (n.get('text') or {}).get('text') and n['text'].get('font_size')]
         med = statistics.median(fss) if fss else 14
         self.S = scale or (1.0 if med <= 24 else round(16 / med / 0.05) * 0.05)
-        self.svg = Svg((maxx - self.minx) * self.S + PAD * 2, (maxy - self.miny) * self.S + PAD * 2, st.get('page_bg'))
+        self.svg_args = ((maxx - self.minx) * self.S + PAD * 2, (maxy - self.miny) * self.S + PAD * 2, st.get('page_bg'))
+        self.svg = Svg(*self.svg_args)
+        self.svg.FONT = self.font
+        self.fit, self.force = {}, {}       # 标准档两遍绘制：第一遍测每个节点放得下的字号，第二遍同行同档统一
         self.bgs = {}
+
+    # ---------------------------------------------------------------- 排版规整（标准档起）
+    def all_sizes(self):
+        out = []
+        for n in self.nodes:
+            t = n.get('text') or {}
+            if not (t.get('text') or '').strip(): continue
+            out.append(t.get('font_size') or 14)
+            for p in ((t.get('rich_text') or {}).get('paragraphs') or []):
+                for e in p.get('elements', []):
+                    s = (e.get('text_element', {}).get('text_style') or {}).get('font_size')
+                    if s: out.append(s)
+        return out
+
+    def tier_fonts(self, tiers):
+        sizes = self.all_sizes()
+        m = tier_sizes(sizes, max_tiers=tiers)
+        self.layout_info['font_tiers'] = fs_report(m, sizes)
+        return m
+
+    def fs_of(self, size, box=None, text=None, bold=False, pad=0):
+        """字号分档后的字号。只有放得下时才上调，避免把文字挤出窄容器。"""
+        ts = self.FS.get(size, size)
+        if ts > size and box and text:
+            lines, _ = layout_text(text, box[2] - pad * 2, 1e6, ts, bold, min_fs=ts)
+            if len(lines) * ts * 1.4 + pad * 2 > box[3] + 1: return size
+        return ts
+
+    def relayout(self):
+        """按父容器分组做对齐 / 等距 / 统一尺寸，再按文字需要撑高行。结构有变化就整组回退。"""
+        groups = {}
+        ov_old = {n['id']: self.B[n['id']] for n in self.nodes if self.role.get(n['id']) == 'overlay'}
+        before = dict(self.B)
+        for n in self.nodes:
+            # 容器（包含其他形状的形状 / section）不参与规整：它的尺寸由内容决定，规整完子元素后再按需撑开
+            if self.role.get(n['id']) in ('card', 'step'):
+                groups.setdefault(self.parent.get(n['id']), []).append(n['id'])
+        info, applied = [], []
+        for p, ids in groups.items():
+            if len(ids) < 2: continue
+            old = {k: list(self.B[k]) for k in ids}
+            new, meta = normalize(old)
+            self.keep_covering(old, new)
+            iss = structure_ok(old, new, meta['rows'])
+            if iss:
+                self.warn.append(f'排版规整已回退（父={p or "顶层"}）：{iss[0]}'); continue
+            self.apply_boxes(old, new)
+            applied.append((p, old, new))
+            info.append({'parent': p, 'moved': meta['moved'], 'max_shift': meta['max_shift'],
+                         'gap': meta['gap'], 'vgap': meta['vgap']})
+        self.revert_cross_overlaps(applied, before, info)
+        self.refit_overlays(ov_old, before)
+        self.cover_children()
+        info.append({'grow_rows': self.grow_rows(0.0 if self.mode == 'aggressive' else 0.05)})
+        info.append({'widened_text': self.widen_free_text()})
+        self.layout_info['layout'] = info
+
+    def revert_cross_overlaps(self, applied, before, info):
+        """不同父容器的卡片之间若出现原图没有的重叠，回退涉及的组（可能要回退多轮）。"""
+        cards = [k for k in before if self.role.get(k) in ('card', 'step')]
+        def ov(a, b): return overlap_ratio(a, b) > 0.02
+        for _ in range(5):
+            bad = set()
+            for i, a in enumerate(cards):
+                for b in cards[i + 1:]:
+                    if ov(self.B[a], self.B[b]) and not ov(before[a], before[b]):
+                        bad.update((self.parent.get(a), self.parent.get(b)))
+            hit = [g for g in applied if g[0] in bad]
+            if not hit: return
+            for p, old, new in hit:
+                self.apply_boxes(new, old); applied.remove((p, old, new))
+                self.warn.append(f'排版规整已回退（父={p or "顶层"}）：与相邻分组产生新的重叠')
+                for d in info:
+                    if d.get('parent') == p: d['reverted'] = True
+
+    def cover_children(self):
+        """自内向外：容器至少要包住子元素（保留原有的内边距，至少 MIN_PAD）。"""
+        conts = [n['id'] for n in self.nodes if self.role.get(n['id']) == 'container']
+        for c in sorted(conts, key=lambda k: -self.depth.get(k, 0)):
+            kids = [k for k, p in self.parent.items() if p == c and k in self.B and self.role.get(k) in SHAPE_ROLES]
+            if not kids: continue
+            x, y, w, h = self.B[c]
+            r = max(self.B[k][0] + self.B[k][2] for k in kids) + MIN_PAD
+            b = max(self.B[k][1] + self.B[k][3] for k in kids) + MIN_PAD
+            self.B[c] = (x, y, max(w, r - x), max(h, b - y))
+
+    def refit_overlays(self, ov_old, before):
+        """遮罩（表示「某阶段范围」的虚线框）按它原来框住的那些卡片的新外接框重算，保持原有外扩边距。"""
+        for oid, ob in ov_old.items():
+            inner = [k for k, b in before.items() if k != oid and self.role.get(k) == 'card' and overlap_ratio(b, ob) >= 0.6]
+            if not inner: continue
+            def ext(B): return (min(B[k][0] for k in inner), min(B[k][1] for k in inner),
+                                max(B[k][0] + B[k][2] for k in inner), max(B[k][1] + B[k][3] for k in inner))
+            o0, o1 = ext(before), ext(self.B)
+            l, t, r, b = ob[0] - o0[0], ob[1] - o0[1], (ob[0] + ob[2]) - o0[2], (ob[1] + ob[3]) - o0[3]
+            self.B[oid] = (o1[0] + l, o1[1] + t, (o1[2] + r) - (o1[0] + l), (o1[3] + b) - (o1[1] + t))
+
+    def keep_covering(self, old, new):
+        """形状不能缩到装不住原本落在它里面的独立文字：按需把右/下边补回来。"""
+        for n in self.nodes:
+            if self.role.get(n['id']) != 'text': continue
+            tx, ty, tw, th = self.B[n['id']]
+            h = self.parent.get(n['id'])
+            if h not in new:      # 没有「完全包住」的宿主时，按检查器的规则取「文字左上角所在的最小形状」（留 4px 容差）
+                T = 4
+                cand = [k for k in new if old[k][0] - T <= tx <= old[k][0] + old[k][2] + T
+                        and old[k][1] - T <= ty <= old[k][1] + old[k][3] + T]
+                if not cand: continue
+                h = min(cand, key=lambda k: old[k][2] * old[k][3])
+            dx, dy = new[h][0] - old[h][0], new[h][1] - old[h][1]
+            tx += dx; ty += dy
+            x, y, w, hh = new[h]
+            need_w = tx + tw + MIN_PAD - x; need_h = ty + th + MIN_PAD - y
+            if tw <= 0 or th <= 0: continue
+            if need_w > w: new[h][2] = need_w
+            if need_h > hh: new[h][3] = need_h
+
+    def apply_boxes(self, old, new):
+        """写回形状新框，并把跟随元素（形状内文字、形状之间的小图标）按同样位移带走。"""
+        for k, b in new.items(): self.B[k] = tuple(b)
+        d = {k: (new[k][0] - old[k][0], new[k][1] - old[k][1]) for k in new}
+        for n in self.nodes:
+            r = self.role.get(n['id'])
+            if r == 'text':
+                h = self.parent.get(n['id'])
+                if h in d:
+                    x, y, w, hh = self.B[n['id']]; self.B[n['id']] = (x + d[h][0], y + d[h][1], w, hh)
+            elif r == 'image':
+                x, y, w, hh = self.B[n['id']]; c = (x + w / 2, y + hh / 2)
+                host = min(d, key=lambda k: abs((old[k][0] + old[k][2] / 2) - c[0]) + abs((old[k][1] + old[k][3] / 2) - c[1]))
+                self.B[n['id']] = (x + d[host][0], y + d[host][1], w, hh)
+
+    def text_need(self, nid, shrink=MAX_SHRINK):
+        """这个形状的文字在「分档字号最多缩 shrink」时需要多高（含最小内边距）。"""
+        n = self.D[nid]; t = n.get('text') or {}
+        s = (t.get('text') or '')
+        if not s.strip(): return 0
+        fs = self.fs_of(t.get('font_size') or 14) * (1 - shrink)
+        bold = t.get('font_weight') == 'bold'
+        w = self.B[nid][2] - MIN_PAD * 2
+        if w <= 10: return 0
+        rl = self.rich_model(n)
+        if rl is not None:
+            _, rows = self.wrap_rich(rl, w, 1e6, fs, True)
+            nl = len(rows or [])
+        else:
+            nl = len(layout_text(s, w, 1e6, fs, bold, min_fs=fs)[0])
+        return nl * fs * 1.4 + MIN_PAD * 2
+
+    def widen_free_text(self):
+        """不在任何形状里的独立文字（如大标题）单行放不下分档字号时，以中心为轴横向撑开，不缩字。"""
+        n_w = 0
+        shapes = [k for k in self.B if self.role.get(k) in SHAPE_ROLES]
+        for n in self.nodes:
+            if self.role.get(n['id']) != 'text' or self.parent.get(n['id']): continue
+            t = n.get('text') or {}; s = (t.get('text') or '').strip()
+            if not s or '\n' in s: continue
+            fs = self.fs_of(t.get('font_size') or 14); bold = t.get('font_weight') == 'bold'
+            x, y, w, h = self.B[n['id']]
+            need = core_text.eff_width(s, fs, bold) + 4
+            if need <= w: continue
+            ha = t.get('horizontal_align', 'center')
+            nx = x - (need - w) / 2 if ha == 'center' else (x - (need - w) if ha == 'right' else x)
+            nb = (nx, y, need, h)
+            if any(overlap_ratio(nb, self.B[k]) > 0 and not overlap_ratio((x, y, w, h), self.B[k]) > 0 for k in shapes): continue
+            self.B[n['id']] = nb; n_w += 1
+        return n_w
+
+    def grow_rows(self, shrink):
+        """文字放不下时撑高整行，位于该行下方的所有节点整体下移。标准档允许先缩字 10%，积极档不缩字。"""
+        ids = [n['id'] for n in self.nodes if self.role.get(n['id']) in SHAPE_ROLES and not self.parent.get(n['id'])]
+        if len(ids) < 2: return 0
+        grown = 0
+        for r in rows_of(self.B, ids):
+            need = max([self.text_need(k, shrink) - self.B[k][3] for k in r] or [0])
+            if need <= 1: continue
+            bottom = max(self.B[k][1] + self.B[k][3] for k in r)
+            for k in r:
+                x, y, w, h = self.B[k]; self.B[k] = (x, y, w, h + need)
+            for n in self.nodes:
+                k = n['id']
+                if k in r or k not in self.B: continue
+                x, y, w, h = self.B[k]
+                if y >= bottom - 1: self.B[k] = (x, y + need, w, h)
+            grown += 1
+        return grown
 
     # 坐标
     def tb(self, b):
@@ -107,27 +326,77 @@ class Painter:
         t = n.get('text') or {}
         s = (t.get('text') or '')
         if not s.strip(): return
-        fs = (t.get('font_size') or 14) * self.S
         bold = t.get('font_weight') == 'bold'
         ha, va = t.get('horizontal_align', 'center'), t.get('vertical_align', 'mid')
-        pad = pad if pad is not None else (8 if box[2] > 60 else 3)
+        if pad is None:
+            pad = (8 if box[2] > 60 else 3) if self.mode == 'conservative' else (MIN_PAD if box[2] > 60 else 4)
+        if self.mode != 'conservative':
+            pad = min(pad, max(0.0, box[3] / 4))      # 很矮的条形容器不要被内边距吃掉
+        fs = self.fs_of(t.get('font_size') or 14, box, s, bold, pad) * self.S
+        nid = n.get('id')
+        forced = nid in self.force
+        if forced: fs = self.force[nid]
         color = self.text_color(n, host_paint)
         if self.rich(n, box, fs, color, ha, va, pad): return
-        lines, fs2 = layout_text(s, box[2] - pad * 2, box[3] - pad * 2, fs, bold, min_fs=max(9, fs * 0.7))
+        lo = max(9, fs * (0.7 if self.mode == 'conservative' else 1 - MAX_SHRINK - 0.05))
+        lines, fs2 = layout_text(s, box[2] - pad * 2, box[3] - pad * 2, fs, bold, min_fs=fs if forced else lo)
+        if self.mode != 'conservative' and len(lines) > 1 and '\n' not in s.strip() and len(s.strip()) <= 12:
+            lo = fs if forced else lo
+            # 短标签（≤ 12 字）不要拦腰折断：先在缩字下限内试单行
+            for pd in (pad, min(pad, 4)):           # 不够时把左右内边距收窄到 4px 再试
+                f = fs
+                while f > lo and core_text.eff_width(s.strip(), f, bold) > box[2] - pd * 2: f -= 0.5
+                if core_text.eff_width(s.strip(), f, bold) <= box[2] - pd * 2:
+                    lines, fs2, pad = [s.strip()], f, pd; break
+        if nid: self.fit[nid] = (fs, fs2)
         self.svg.text_block(box, lines, fs2, color, bold, ha, va, pad)
 
+    def rich_model(self, n):
+        """标准档的富文本：有列表符号或段内字重不一时返回行模型，否则 None（走普通排版）。"""
+        rl = rich_lines(n)
+        if not rl: return None
+        ws = {b for _, sg in rl for _, b in sg}
+        if any(mk for mk, _ in rl) or len(ws) > 1: return rl
+        return None
+
     def rich(self, n, box, fs, color, ha, va, pad):
-        """富文本（段内粗体）：每段能单行放下时，用多个 <text> 手动排位保留粗体；否则返回 False 走普通排版。"""
+        """富文本：保留段内粗体与列表符号（• / 1.），按词元换行，续行悬挂缩进，放不下时整体缩字号。
+        保守档沿用旧规则（只有每段都能单行放下时才走这条路径），以保证输出与 0.2.x 一致。"""
+        if self.mode == 'conservative': return self.rich_legacy(n, box, fs, color, ha, va, pad)
+        rl = self.rich_model(n)
+        if rl is None: return False
+        avail = box[2] - pad * 2
+        f0 = fs
+        fs, rows = self.wrap_rich(rl, avail, box[3] - pad * 2, fs, n.get('id') in self.force)
+        if rows is None: return False
+        if n.get('id'): self.fit[n['id']] = (f0, fs)
+        accent = self.st['families']['blue']['soft']['text'] if color in (self.st['ink'], self.st['muted']) else color
+        step = fs * 1.4
+        y0 = box[1] + (box[3] - step * len(rows)) / 2 if va != 'top' else box[1] + pad
+        for i, (mk, ind, segs, w) in enumerate(rows):
+            # 对齐按检查器口径的宽度算（比实测宽），右/居中时才不会被判成右侧溢出
+            tot = ind + max(w, sum(core_text.eff_width(t, fs, b) for t, b in segs))
+            x = {'left': box[0] + pad, 'right': box[0] + box[2] - pad - tot}.get(ha, box[0] + (box[2] - tot) / 2)
+            y = y0 + i * step + step / 2 + fs * 0.36
+            if mk: self.svg.text(x, y, mk, fs, color, False)
+            x += ind
+            for s, b in segs:
+                self.svg.text(x, y, s, fs, accent if b else color, b)
+                x += text_width(s, fs, b)
+        return True
+
+    def rich_legacy(self, n, box, fs, color, ha, va, pad):
         paras = ((n.get('text') or {}).get('rich_text') or {}).get('paragraphs')
         if not paras or not any(e.get('text_element', {}).get('text_style', {}).get('font_weight') == 'bold'
                                 for p in paras for e in p.get('elements', [])):
             return False
+        P = [[(e['text_element']['text'], e['text_element'].get('text_style', {}).get('font_weight') == 'bold')
+              for e in p.get('elements', []) if 'text_element' in e] for p in paras]
+        avail = box[2] - pad * 2
         rows = []
-        for p in paras:
-            segs = [(e['text_element']['text'], e['text_element'].get('text_style', {}).get('font_weight') == 'bold')
-                    for e in p.get('elements', []) if 'text_element' in e]
-            w = sum(text_width(s, fs, b) for s, b in segs)
-            if w > box[2] - pad * 2: return False
+        for segs in P:
+            w = sum(text_width(t, fs, b) for t, b in segs)
+            if w > avail: return False
             rows.append((segs, w))
         accent = self.st['families']['blue']['soft']['text'] if color in (self.st['ink'], self.st['muted']) else color
         step = fs * 1.6; y0 = box[1] + (box[3] - step * len(rows)) / 2 if va != 'top' else box[1] + pad
@@ -137,6 +406,63 @@ class Painter:
                 self.svg.text(x, y0 + i * step + step / 2 + fs * 0.36, s, fs, accent if b else color, b)
                 x += text_width(s, fs, b)
         return True
+
+    def wrap_rich(self, lines, avail, avail_h, fs, fixed=False):
+        """lines = [(列表符号, [(文字, 粗体), ...]), ...]。按词元折行（段内粗体保留、末行不留孤字、续行悬挂缩进），
+        必要时缩字号。返回 (字号, [(符号, 缩进, 该行各段, 行宽)])；符号只出现在每项第一行。"""
+        if avail <= 10: return fs, None
+        lo = fs if fixed else max(9, fs * (1 - MAX_SHRINK - 0.05))
+        while True:
+            out = []
+            ind_all = max([text_width(mk, fs) + fs * 0.45 for mk, _ in lines if mk] or [0])
+            for mk, segs in lines:
+                ind = ind_all if mk else 0
+                if not segs: out.append(('', 0, [], 0.0)); continue
+                for j, (sg, w) in enumerate(self.balance_para(segs, avail - ind, fs)):
+                    out.append((mk if j == 0 else '', ind, sg, w))
+            too_wide = any(o[1] + core_text.eff_width(''.join(x for x, _ in o[2]), fs, any(b for _, b in o[2])) > avail + 1
+                           for o in out if o[2])
+            # 短标签（每项 ≤ 12 字）被折成多行时，先尝试在缩字下限内放成一行
+            short_broken = any(sum(len(t) for t, _ in sg) <= 12 and
+                               sum(1 for o in out if o[2] and o[0] == mk) > 0 and
+                               len(self.balance_para(sg, avail - (ind_all if mk else 0), fs)) > 1
+                               for mk, sg in lines if sg)
+            fits = len(out) * fs * 1.4 <= avail_h + fs * 0.4 and not too_wide
+            if (fits and not short_broken) or fs <= lo:
+                return fs, out
+            fs -= 0.5
+
+    def balance_para(self, segs, avail, fs):
+        """一个段落折行：先按 avail 贪心，再在 0.62–1.0 倍宽度内找「行数不增、各行最均衡」的方案。"""
+        base = self.greedy_para(segs, avail, fs)
+        if len(base) < 2: return base
+        def score(m):
+            ws = [x[1] for x in m]
+            ends = sum(1 for segs_, _ in m[:-1] if segs_ and segs_[-1][0][-1:] in '，、；：,;:')
+            return (max(ws) - min(ws)) - ends * fs * 4          # 在标点后断行的方案优先
+        best, bd, w = base, score(base), avail
+        while w >= avail * 0.62:
+            m = self.greedy_para(segs, w, fs)
+            if len(m) > len(base): break
+            sc = score(m)
+            if sc < bd: best, bd = m, sc
+            w -= 2
+        return best
+
+    def greedy_para(self, segs, avail, fs):
+        out, cur, cw = [], [], 0.0
+        for t, b in segs:
+            for tk in core_text.tokens(t):
+                w = core_text.eff_width(tk, fs, b)
+                # 行首禁则：句读标点挂在上一行末尾（允许略超出 1 个字宽）
+                if cur and cw + w > avail and not (tk in core_text.NO_LINE_START and cw + w <= avail + fs * 1.1):
+                    out.append((cur, sum(text_width(x, fs, bb) for x, bb in cur))); cur, cw = [], 0.0
+                    if not tk.strip(): continue
+                if cur and cur[-1][1] == b: cur[-1] = (cur[-1][0] + tk, b)
+                else: cur.append((tk, b))
+                cw += w
+        if cur: out.append((cur, sum(text_width(x, fs, bb) for x, bb in cur)))
+        return out
 
     # 形状
     def shape_paint(self, n, role):
@@ -169,7 +495,8 @@ class Painter:
                 self.svg.text(b[0] + 4, b[1] - 8, title, 15 * max(self.S, 0.8), self.st['heading'], True)
         elif (n.get('text') or {}).get('text', '').strip():
             t = dict(n['text']); t['vertical_align'] = 'top'
-            self.draw_text({'text': t}, (b[0], b[1] + 4, b[2], min(b[3], 44 * self.S + 16)), p, pad=10)
+            self.draw_text({'text': t}, (b[0], b[1] + 4, b[2], min(b[3], 44 * self.S + 16)), p,
+                           pad=10 if self.mode == 'conservative' else 4)
 
     def draw_card(self, n):
         b = self.tb(self.B[n['id']])
@@ -314,22 +641,56 @@ class Painter:
             self.svg.polygon(P, color)
 
     def dodge_text(self, P, nid):
-        """检查器把「文字左上角所在的形状」当作文字容器。小图标（如流程箭头）若盖住某段文字的左上角，
-        就把图标向远离文字的方向压缩几个像素，避免误判为文字溢出。"""
-        x0, y0 = min(p[0] for p in P), min(p[1] for p in P); x1, y1 = max(p[0] for p in P), max(p[1] for p in P)
-        M = 4                                        # 检查器的文字宽度估算比实测略大，留余量
+        """检查器把「文字左上角所在的形状」当作文字容器，小图标（流程箭头等）压住文字就会被判成溢出。
+        保守档沿用「压缩图标」的旧做法；标准档允许移动，直接把图标整体挪到文字块之外（挪动量最小的一侧）。"""
+        M = 4
+        if self.mode != 'conservative':
+            for tx, ty, tw_, th in self.svg.texts:
+                x0, y0 = min(p[0] for p in P), min(p[1] for p in P); x1, y1 = max(p[0] for p in P), max(p[1] for p in P)
+                L, T, R, Bo = tx - M, ty - M, tx + tw_ + M, ty + th + M
+                if x1 <= L or x0 >= R or y1 <= T or y0 >= Bo: continue
+                opts = [(L - x1, 0), (R - x0, 0), (0, T - y1), (0, Bo - y0)]
+                dx, dy = min(opts, key=lambda d: abs(d[0]) + abs(d[1]))
+                P = [(px + dx, py + dy) for px, py in P]
+                self.warn.append(f'image {nid} 与文字重叠，已移动 ({round(dx)}, {round(dy)})px')
+            return P
         for tx, ty, tw_, th in self.svg.texts:
-            if x0 < tx + M and tx - M < x1 and y0 < ty + M and ty - M < y1 and tx + tw_ > x1:
-                if tx - x0 >= (x1 - x0) * 0.4:      # 文字在图标右侧：收窄
-                    k = max(0.3, (tx - M - x0) / (x1 - x0)); P = [(x0 + (px - x0) * k, py) for px, py in P]
-                else:                                # 文字在图标下方：压低
-                    k = max(0.3, (ty - M - y0) / (y1 - y0)); P = [(px, y0 + (py - y0) * k) for px, py in P]
-                x1, y1 = max(p[0] for p in P), max(p[1] for p in P)
-                self.warn.append(f'image {nid} 盖住文字左上角，已压缩 {round((1 - k) * 100)}%')
+            x0, y0 = min(p[0] for p in P), min(p[1] for p in P); x1, y1 = max(p[0] for p in P), max(p[1] for p in P)
+            if not (x0 < tx + M and tx - M < x1 and y0 < ty + M and ty - M < y1 and tx + tw_ > x1): continue
+            if tx - x0 >= (x1 - x0) * 0.4:
+                k = max(0.3, (tx - M - x0) / (x1 - x0)); P = [(x0 + (px - x0) * k, py) for px, py in P]
+            else:
+                k = max(0.3, (ty - M - y0) / (y1 - y0)); P = [(px, y0 + (py - y0) * k) for px, py in P]
+            self.warn.append(f'image {nid} 盖住文字左上角，已压缩 {round((1 - k) * 100)}%')
         return P
 
     # 主流程
     def run(self):
+        if self.mode == 'conservative': return self.draw_all()
+        self.draw_all()
+        self.force = self.unify_fit()
+        self.svg = Svg(*self.svg_args); self.svg.FONT = self.font
+        self.bgs, self.warn = {}, [w for w in self.warn if not w.startswith('image ')]
+        return self.draw_all()
+
+    def unify_fit(self):
+        """同一父容器、同一行、同一原字号档的节点取放得下的最小字号（向下取整），让并列卡片字号一致。"""
+        groups = {}
+        for nid, (want, got) in self.fit.items():
+            if self.role.get(nid) not in SHAPE_ROLES and self.role.get(nid) != 'text': continue
+            groups.setdefault((self.parent.get(nid), round(want, 1)), []).append(nid)
+        force, shrunk = {}, 0
+        for (p, want), ids in groups.items():
+            rows = rows_of(self.B, ids)
+            for r in rows:
+                m = min(self.fit[k][1] for k in r)
+                v = float(int(m)) if m < want else want          # 缩过的取整数，避免 12.5 / 11.5 这类碎字号
+                for k in r: force[k] = v
+                if v < want: shrunk += len(r)
+        self.layout_info['shrunk_text'] = shrunk
+        return force
+
+    def draw_all(self):
         N = self.nodes; R = self.role
         self.clash = self.find_clash()
         self.skip = self.find_redundant()
@@ -394,7 +755,8 @@ class Painter:
 
     def report(self):
         from collections import Counter
-        return {'scale': self.S, 'roles': dict(Counter(self.role.values())),
+        return {'scale': self.S, 'mode': self.mode, 'font': self.font, **self.layout_info,
+                'roles': dict(Counter(self.role.values())),
                 'color_map': self.M.table(),
                 'warnings': self.warn}
 
@@ -406,14 +768,22 @@ def main():
     ap.add_argument('--report', help='写出角色与配色映射报告 JSON')
     ap.add_argument('--map', action='append', default=[], help='强制原色归类，如 "#e8f8f3=teal/soft"')
     ap.add_argument('--scale', type=float)
+    ap.add_argument('--mode', choices=['conservative', 'standard', 'aggressive'], default='standard',
+                    help='conservative=只改配色（0.2.x 行为）；standard=加对齐/等距/统一尺寸/字号分档（默认）；aggressive=再按需撑高行')
+    ap.add_argument('--font', help='统一字体，默认微软雅黑')
+    ap.add_argument('--tiers', type=int, default=4, help='字号档数上限（默认 4）')
     a = ap.parse_args()
     ov = parse_maps(a.map)
     nodes = [n for n in load_raw(a.raw) if n['type'] != 'group']
-    P = Painter(nodes, load_style(a.style), ov, a.scale)
+    P = Painter(nodes, load_style(a.style), ov, a.scale, a.mode, a.font, a.tiers)
     P.run().save(a.out)
     rep = P.report()
     if a.report: json.dump(rep, open(a.report, 'w'), ensure_ascii=False, indent=1)
-    print(json.dumps({'out': a.out, 'scale': rep['scale'], 'roles': rep['roles'], 'colors': len(rep['color_map']),
+    print(json.dumps({'out': a.out, 'mode': rep['mode'], 'font': rep['font'], 'scale': rep['scale'],
+                      'font_tiers': {k: v['count'] for k, v in (rep.get('font_tiers') or {}).items()},
+                      'moved': sum(g.get('moved', 0) for g in (rep.get('layout') or [])),
+                      'max_shift': max([g.get('max_shift', 0) for g in (rep.get('layout') or [])] or [0]),
+                      'roles': rep['roles'], 'colors': len(rep['color_map']),
                       'warnings': len(rep['warnings'])}, ensure_ascii=False))
     for w in rep['warnings'][:10]: print('  !', w)
 

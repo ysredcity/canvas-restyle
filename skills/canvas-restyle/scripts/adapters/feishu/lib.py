@@ -44,6 +44,46 @@ def node_text(n):
     return out
 
 
+# ---------------------------------------------------------------- 富文本
+def rich_lines(n):
+    """把节点的富文本拆成「行」：[(列表符号, [(文字, 是否粗体), ...]), ...]。
+    - paragraph_type 1 = 无序列表（•），2 = 有序列表（1. 2. …，连续的有序段落连续编号）；
+    - 一个段落里夹着的硬换行（\n / \r\n）拆成多行，列表编号顺延；
+    - 片段没写字重时继承节点字重。
+    没有富文本时返回 None。列表符号是原画板的显示效果，不在 text 字段里，verify_text 会按同一规则计入。"""
+    t = n.get('text') or {}
+    paras = (t.get('rich_text') or {}).get('paragraphs')
+    if not paras: return None
+    base = t.get('font_weight') == 'bold'
+    out, num = [], 0
+    for p in paras:
+        kind = p.get('paragraph_type', 0)
+        if kind == 2: num = num + 1 if num else (p.get('list_begin_index') or 0) + 1
+        else: num = 0
+        segs, cur = [], []
+        for e in p.get('elements', []):
+            te = e.get('text_element')
+            if not te: continue
+            w = (te.get('text_style') or {}).get('font_weight')
+            b = base if w is None else (w == 'bold')
+            parts = te.get('text', '').replace('\r\n', '\n').replace('\r', '\n').split('\n')
+            for i, part in enumerate(parts):
+                if i > 0: segs.append(cur); cur = []
+                if part: cur.append((part, b))
+        segs.append(cur)
+        for i, sg in enumerate(segs):
+            if i > 0 and not sg: continue           # 段末换行留下的空行
+            if kind == 2 and i > 0: num += 1
+            mk = '•' if kind == 1 else (f'{num}.' if kind == 2 else '')
+            out.append((mk if sg else '', sg))
+    return out
+
+
+def list_marker_chars(n):
+    """该节点渲染时会多出来的列表符号字符（供 verify_text 计入原画板一侧）。"""
+    return ''.join(mk for mk, _ in (rich_lines(n) or []) if mk)
+
+
 # ---------------------------------------------------------------- SVG
 def esc(t):
     return t.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;')
